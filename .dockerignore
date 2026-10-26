@@ -1,0 +1,6 @@
+.angular
+.git
+.gradle
+build
+dist
+node_modules

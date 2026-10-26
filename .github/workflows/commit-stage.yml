@@ -1,85 +1,50 @@
 name: Commit Stage
-on: push
+on:
+  push:
+  workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: polarbookshop/polar-ui
-  VERSION: latest
+  IMAGE: ghcr.io/mikkosuonio-ai/polar-ui
 
 jobs:
-  build:
-    name: Build and Test
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Build, unit tests and integration tests
-        run: |
-          chmod +x gradlew
-          ./gradlew buildAngular
-      - name: Code vulnerability scanning
-        uses: anchore/scan-action@v3
-        id: scan
-        with:
-          path: "${{ github.workspace }}"
-          fail-build: false
-          severity-cutoff: high
-      - name: Upload vulnerability report
-        uses: github/codeql-action/upload-sarif@v2
-        if: success() || failure()
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
-      - name: Validate Kubernetes manifests
-        uses: stefanprodan/kube-tools@v1
-        with:
-          kubectl: 1.28.3
-          kubeconform: 0.6.4
-          command: |
-            kubeconform --strict k8s
   package:
-    name: Package and Publish
-    if: ${{ github.ref == 'refs/heads/main' }}
-    needs: [ build ]
-    runs-on: ubuntu-22.04
+    name: Build and Publish Image
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
-      security-events: write
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v4
-      - name: Set up Pack CLI
-        uses: buildpacks/github-actions/setup-pack@v5.5.1
-      - name: Build SPA
+        uses: actions/checkout@v5
+      # The image's build stage builds the SPA, so this step builds both on every push.
+      - name: Build image
+        run: docker build --file Containerfile --tag polar-ui .
+      # mikkosuonio/development gets sha-<7 hex>, and a v* tag gets its own name as well. main
+      # stays as upstream's.
+      - name: Choose image tags
+        id: tags
+        if: >-
+          ${{ github.ref == 'refs/heads/mikkosuonio/development'
+          || startsWith(github.ref, 'refs/tags/v') }}
         run: |
-          chmod +x gradlew
-          ./gradlew buildAngular
-      - name: Package SPA
-        run: |
-          pack build ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
-            --buildpack gcr.io/paketo-buildpacks/nginx \
-            --builder paketobuildpacks/builder:base \
-            -p dist
-      - name: OCI image vulnerability scanning
-        uses: anchore/scan-action@v3
-        id: scan
-        with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-          fail-build: false
-          severity-cutoff: high
-      - name: Upload vulnerability report
-        uses: github/codeql-action/upload-sarif@v2
-        if: success() || failure()
-        with:
-          sarif_file: ${{ steps.scan.outputs.sarif }}
+          tags="sha-${GITHUB_SHA::7}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            tags+=" $GITHUB_REF_NAME"
+          fi
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
       - name: Log into container registry
-        uses: docker/login-action@v3
+        if: ${{ steps.tags.outputs.tags }}
+        uses: docker/login-action@v4
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish container image
-        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Publish image
+        if: ${{ steps.tags.outputs.tags }}
+        env:
+          TAGS: ${{ steps.tags.outputs.tags }}
+        run: |
+          for tag in $TAGS; do
+            docker tag polar-ui "$IMAGE:$tag"
+            docker push "$IMAGE:$tag"
+          done
