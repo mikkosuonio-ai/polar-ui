@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v5
       # The image's build stage builds the SPA, so this step builds both on every push.
       - name: Build image
-        run: docker build --file Containerfile --tag polar-ui .
+        run: docker build --tag polar-ui .
       # mikkosuonio/development gets sha-<7 hex>, and a v* tag gets its own name as well. main
       # stays as upstream's.
       - name: Choose image tags

@@ -9,14 +9,11 @@ This is a fork of [PolarBookshop/polar-ui](https://github.com/PolarBookshop/pola
 which tests it as part of the whole system.
 
 Differences from the original:
-- The image is built from `Containerfile` (Node.js 16 to build the SPA, then unprivileged nginx
+- The image is built from `Dockerfile` (Node.js 16 to build the SPA, then unprivileged nginx
   to serve it) instead of with the Paketo nginx buildpack. `nginx/nginx.conf.template` is the
   nginx configuration, with the port taken from `PORT` (default 9004).
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
   each push to `mikkosuonio/development`, and the tag's name for each `v*` tag.
-
-`Containerfile` is a Dockerfile under the name that Podman and Buildah look for first. Its
-syntax is the same. Docker looks only for `Dockerfile`, so it needs the name with `-f`.
 
 ## Instructions
 
@@ -30,7 +27,7 @@ Then, build the image with Docker or Podman. The image's build stage builds the 
 the first step isn't needed for this.
 
 ```shell
-docker build -f Containerfile -t polar-ui .
+docker build -t polar-ui .
 podman build -t polar-ui .
 ```
 
