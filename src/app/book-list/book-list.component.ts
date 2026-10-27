@@ -33,7 +33,7 @@ export class BookListComponent implements OnInit {
   removeBook(isbn: string): void {
     this.bookService.deleteBook(isbn)
       .subscribe(() => {
-        this.router.navigateByUrl('/browse-books');
+        this.books = this.books.filter(book => book.isbn !== isbn);
       });
   }
 
