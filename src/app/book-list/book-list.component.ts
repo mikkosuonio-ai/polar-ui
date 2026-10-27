@@ -27,13 +27,17 @@ export class BookListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadBooks();
+  }
+
+  loadBooks(): void {
     this.bookService.getBooks().subscribe(books => this.books = books);
   }
 
   removeBook(isbn: string): void {
     this.bookService.deleteBook(isbn)
       .subscribe(() => {
-        this.books = this.books.filter(book => book.isbn !== isbn);
+        this.loadBooks();
       });
   }
 
