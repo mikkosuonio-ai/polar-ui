@@ -5,6 +5,8 @@ on:
 
 env:
   IMAGE: ghcr.io/mikkosuonio-ai/polar-ui
+  # Pinned, since a new latest can break the build.
+  BUILDER: docker.io/paketobuildpacks/builder-jammy-base:0.4.673
 
 jobs:
   package:
@@ -16,9 +18,27 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v5
-      # The image's build stage builds the SPA, so this step builds both on every push.
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      # buildAngular downloads Node.js 16, builds the SPA into dist/public and copies nginx/ into
+      # dist.
+      - name: Build SPA
+        run: |
+          chmod +x gradlew
+          ./gradlew buildAngular
+      - name: Set up Pack CLI
+        uses: buildpacks/github-actions/setup-pack@v6.2.1
+      # The builder's nginx buildpack, with its default nginx version. BP_NGINX_VERSION fails
+      # the buildpack's detection (1.3.3) unless there is a buildpack.yml.
       - name: Build image
-        run: docker build --tag polar-ui .
+        run: |
+          pack build polar-ui \
+            --builder "$BUILDER" \
+            --buildpack paketo-buildpacks/nginx \
+            --path dist
       # mikkosuonio/development gets sha-<7 hex>, and a v* tag gets its own name as well. main
       # stays as upstream's.
       - name: Choose image tags

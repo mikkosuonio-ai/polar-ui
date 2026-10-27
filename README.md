@@ -9,9 +9,10 @@ This is a fork of [PolarBookshop/polar-ui](https://github.com/PolarBookshop/pola
 which tests it as part of the whole system.
 
 Differences from the original:
-- The image is built from `Dockerfile` (Node.js 16 to build the SPA, then unprivileged nginx
-  to serve it) instead of with the Paketo nginx buildpack. `nginx/nginx.conf.template` is the
-  nginx configuration, with the port taken from `PORT` (default 9004).
+- The image is built with `paketobuildpacks/builder-jammy-base` (Ubuntu 22.04), pinned to a
+  version, instead of the deprecated `paketobuildpacks/builder:base` (Ubuntu 18.04). Its nginx
+  runs as a user who can't write to `/workspace`, so `nginx/nginx.conf` puts nginx's temporary
+  files in the buildpack's `{{ tempDir }}`.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
   each push to `mikkosuonio/development`, and the tag's name for each `v*` tag.
 
@@ -23,20 +24,33 @@ Run the following command to build the project.
 ./gradlew buildAngular
 ```
 
-Then, build the image with Docker or Podman. The image's build stage builds the SPA too, so
-the first step isn't needed for this.
+Then, package it in an NGINX container using the [pack](https://buildpacks.io/docs/tools/pack/)
+CLI and the Paketo Buildpacks. Use the builder version in `.github/workflows/commit-stage.yml`.
 
 ```shell
-docker build -t polar-ui .
-podman build -t polar-ui .
+pack build polar-ui \
+  --builder paketobuildpacks/builder-jammy-base:0.4.673 \
+  --buildpack paketo-buildpacks/nginx \
+  --path dist
 ```
 
-Finally, you can run the container as follows.
+`pack` uses Docker by default. To use Podman instead, start Podman's Docker-compatible API
+socket and point `pack` at it:
 
 ```shell
-docker run -d --name polar-ui --publish 9004:9004 polar-ui
-podman run -d --name polar-ui --publish 9004:9004 polar-ui
+systemctl --user start podman.socket
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock
+pack build polar-ui \
+  --builder paketobuildpacks/builder-jammy-base:0.4.673 \
+  --buildpack paketo-buildpacks/nginx \
+  --path dist \
+  --docker-host=inherit
 ```
 
-It listens on port 9004. To use another port, set `PORT`, for example
-`--env PORT=8080 --publish 8080:8080`.
+Finally, you can run the container as follows. The image has no default port, so `PORT` is
+required.
+
+```shell
+docker run -d --name polar-ui --publish 9004:9004 --env PORT=9004 polar-ui
+podman run -d --name polar-ui --publish 9004:9004 --env PORT=9004 polar-ui
+```
