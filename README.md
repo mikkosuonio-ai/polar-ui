@@ -20,7 +20,8 @@ Differences from the original:
 - Playwright e2e tests in `e2e/` replace Protractor. They mock the API in the browser, and the
   workflow runs them against the image it has just built, before it publishes the image.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
-  each push to `mikkosuonio/development`, and the tag's name for each `v*` tag.
+  each push to `mikkosuonio/development`, and the tag's name alone for each `v*` tag on that
+  branch. A `v*` tag elsewhere fails the workflow.
 
 ## Instructions
 
