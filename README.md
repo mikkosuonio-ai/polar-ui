@@ -15,6 +15,8 @@ Differences from the original:
   files in the buildpack's `{{ tempDir }}`.
 - The unit tests run headless in the build (`testAngular`), and the workflow runs them before
   it builds the image.
+- No linter for now: tslint and codelyzer are gone, and angular-eslint is to come with the
+  Angular update.
 - Playwright e2e tests in `e2e/` replace Protractor. They mock the API in the browser, and the
   workflow runs them against the image it has just built, before it publishes the image.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for

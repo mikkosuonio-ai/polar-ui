@@ -7,17 +7,6 @@ node {
 	version = "16.14.0"
 }
 
-task lintAngular(type: NpxTask) {
-    command = "ng"
-    args = ["lint"]
-    dependsOn(tasks.npmInstall)
-    inputs.dir("src")
-    inputs.dir("node_modules")
-    inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json", "tsconfig.spec.json",
-        "tslint.json")
-    outputs.upToDateWhen { true }
-}
-
 // Runs the unit tests once, in headless Chrome (CHROME_BIN, if set), and writes their JUnit
 // results to build/test-results/testAngular.
 task testAngular(type: NpxTask) {
