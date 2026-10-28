@@ -10,7 +10,7 @@ env:
 
 jobs:
   package:
-    name: Build and Publish Image
+    name: Test, Build and Publish Image
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -23,12 +23,27 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      # buildAngular downloads Node.js 16, builds the SPA into dist/public and copies nginx/ into
-      # dist.
-      - name: Build SPA
+      # testAngular downloads Node.js 16 and runs the unit tests once in the runner's Chrome
+      # (CHROME_BIN), writing JUnit results to build/test-results/testAngular.
+      - name: Unit tests
         run: |
           chmod +x gradlew
-          ./gradlew buildAngular
+          ./gradlew testAngular
+      - name: Summarize unit tests
+        if: ${{ !cancelled() }}
+        run: |
+          python3 .github/scripts/junit-summary.py "Unit tests" build/test-results/testAngular/*.xml \
+            >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload unit test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-results
+          path: build/test-results/testAngular/
+          retention-days: 14
+      # buildAngular builds the SPA into dist/public and copies nginx/ into dist.
+      - name: Build SPA
+        run: ./gradlew buildAngular
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v6.2.1
       # The builder's nginx buildpack, with its default nginx version. BP_NGINX_VERSION fails

@@ -18,14 +18,16 @@ task lintAngular(type: NpxTask) {
     outputs.upToDateWhen { true }
 }
 
+// Runs the unit tests once, in headless Chrome (CHROME_BIN, if set), and writes their JUnit
+// results to build/test-results/testAngular.
 task testAngular(type: NpxTask) {
     command = "ng"
-    args = ["test"]
+    args = ["test", "--watch=false", "--browsers=ChromeHeadlessNoSandbox"]
     dependsOn(tasks.npmInstall)
     inputs.dir("src")
     inputs.dir("node_modules")
     inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.spec.json", "karma.conf.js")
-    outputs.upToDateWhen { true }
+    outputs.dir("build/test-results/testAngular")
 }
 
 task buildAngular(type: NpxTask) {

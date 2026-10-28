@@ -13,10 +13,19 @@ Differences from the original:
   version, instead of the deprecated `paketobuildpacks/builder:base` (Ubuntu 18.04). Its nginx
   runs as a user who can't write to `/workspace`, so `nginx/nginx.conf` puts nginx's temporary
   files in the buildpack's `{{ tempDir }}`.
+- The unit tests run headless in the build (`testAngular`), and the workflow runs them before
+  it builds the image.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
   each push to `mikkosuonio/development`, and the tag's name for each `v*` tag.
 
 ## Instructions
+
+Run the unit tests once in headless Chrome. Set `CHROME_BIN` if Chrome isn't on the `PATH`. The
+JUnit results go to `build/test-results/testAngular`.
+
+```shell
+./gradlew testAngular
+```
 
 Run the following command to build the project.
 
