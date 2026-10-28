@@ -7,6 +7,7 @@ env:
   IMAGE: ghcr.io/mikkosuonio-ai/polar-ui
   # Pinned, since a new latest can break the build.
   BUILDER: docker.io/paketobuildpacks/builder-jammy-base:0.4.673
+  KUBECONFORM_VERSION: 0.8.0
 
 jobs:
   package:
@@ -15,9 +16,15 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     steps:
       - name: Checkout source code
         uses: actions/checkout@v5
+      - name: Validate Kubernetes manifests
+        run: |
+          curl -fsSL "https://github.com/yannh/kubeconform/releases/download/v$KUBECONFORM_VERSION/kubeconform-linux-amd64.tar.gz" \
+            | tar -xz -C "$RUNNER_TEMP" kubeconform
+          "$RUNNER_TEMP/kubeconform" -strict -summary k8s
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -44,6 +51,21 @@ jobs:
       # buildAngular builds the SPA into dist/public and copies nginx/ into dist.
       - name: Build SPA
         run: ./gradlew buildAngular
+      # The vulnerability scans report to code scanning, as upstream's did, without failing the
+      # build. Each upload needs a category of its own, since both are in this job.
+      - name: Code vulnerability scanning
+        id: scan-code
+        uses: anchore/scan-action@v7
+        with:
+          path: ${{ github.workspace }}
+          fail-build: false
+          severity-cutoff: high
+      - name: Upload code vulnerability report
+        if: ${{ !cancelled() && steps.scan-code.outputs.sarif }}
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.scan-code.outputs.sarif }}
+          category: code
       - name: Set up Pack CLI
         uses: buildpacks/github-actions/setup-pack@v6.2.1
       # The builder's nginx buildpack, with its default nginx version. BP_NGINX_VERSION fails
@@ -54,6 +76,19 @@ jobs:
             --builder "$BUILDER" \
             --buildpack paketo-buildpacks/nginx \
             --path dist
+      - name: Image vulnerability scanning
+        id: scan-image
+        uses: anchore/scan-action@v7
+        with:
+          image: polar-ui
+          fail-build: false
+          severity-cutoff: high
+      - name: Upload image vulnerability report
+        if: ${{ !cancelled() && steps.scan-image.outputs.sarif }}
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.scan-image.outputs.sarif }}
+          category: image
       # The e2e tests run against the image just built, so its nginx config is tested too. They
       # mock the API in the browser, so they need no backend.
       - name: Set up Node.js
