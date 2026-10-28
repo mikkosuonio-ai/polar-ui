@@ -119,11 +119,10 @@ jobs:
           node-version-file: e2e/.nvmrc
           cache: npm
           cache-dependency-path: e2e/package-lock.json
-      - name: Install the e2e tests' packages and browser
+      # No browser to install: the tests use the runner's Google Chrome (UI_TEST_CHANNEL).
+      - name: Install the e2e tests' packages
         working-directory: e2e
-        run: |
-          npm ci --no-audit --no-fund
-          npx playwright install --with-deps chromium-headless-shell
+        run: npm ci --no-audit --no-fund
       - name: Start the image
         run: |
           docker run -d --name polar-ui --publish 9004:9004 --env PORT=9004 polar-ui
@@ -138,6 +137,7 @@ jobs:
         working-directory: e2e
         env:
           UI_BASE_URL: http://localhost:9004
+          UI_TEST_CHANNEL: chrome
           UI_TEST_JUNIT: junit/TEST-e2e.xml
           UI_TEST_REPORT: playwright-report
         run: npx playwright test

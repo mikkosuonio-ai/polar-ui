@@ -15,6 +15,8 @@ import { join } from 'node:path';
 //                   `./gradlew buildAngular` builds, on PORT. The SPA routes by hash, so a static
 //                   server is enough.
 //   PORT            the port for ../dist/public (default 4300)
+//   UI_TEST_CHANNEL an installed browser to use instead of Playwright's own Chromium, such as
+//                   chrome for Google Chrome, which needs no `npx playwright install`
 //   UI_TEST_OUTPUT  directory for traces and screenshots of failed tests (default test-results)
 //   UI_TEST_JUNIT   also write the results to this file with the JUnit reporter
 //   UI_TEST_REPORT  also write the HTML report to this directory
@@ -46,6 +48,7 @@ export default defineConfig({
   use: {
     baseURL,
     browserName: 'chromium',
+    channel: process.env.UI_TEST_CHANNEL,
     headless: true,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
