@@ -54,6 +54,53 @@ jobs:
             --builder "$BUILDER" \
             --buildpack paketo-buildpacks/nginx \
             --path dist
+      # The e2e tests run against the image just built, so its nginx config is tested too. They
+      # mock the API in the browser, so they need no backend.
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: e2e/.nvmrc
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+      - name: Install the e2e tests' packages and browser
+        working-directory: e2e
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium-headless-shell
+      - name: Start the image
+        run: |
+          docker run -d --name polar-ui --publish 9004:9004 --env PORT=9004 polar-ui
+          for _ in $(seq 30); do
+            curl -fsS -o /dev/null http://localhost:9004/ && exit 0
+            sleep 1
+          done
+          docker logs polar-ui
+          exit 1
+      - name: e2e tests
+        id: e2e
+        working-directory: e2e
+        env:
+          UI_BASE_URL: http://localhost:9004
+          UI_TEST_JUNIT: junit/TEST-e2e.xml
+          UI_TEST_REPORT: playwright-report
+        run: npx playwright test
+      - name: Summarize e2e tests
+        if: ${{ !cancelled() && steps.e2e.outcome != 'skipped' }}
+        run: python3 .github/scripts/junit-summary.py "e2e tests" e2e/junit/*.xml >> "$GITHUB_STEP_SUMMARY"
+      - name: Show the image's log
+        if: ${{ !cancelled() && steps.e2e.outcome != 'skipped' }}
+        run: docker logs polar-ui || true
+      # Traces and screenshots of failed tests, and the HTML report.
+      - name: Upload e2e test results
+        if: ${{ !cancelled() && steps.e2e.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-test-results
+          path: |
+            e2e/junit/
+            e2e/playwright-report/
+            e2e/test-results/
+          retention-days: 14
       # mikkosuonio/development gets sha-<7 hex>, and a v* tag gets its own name as well. main
       # stays as upstream's.
       - name: Choose image tags

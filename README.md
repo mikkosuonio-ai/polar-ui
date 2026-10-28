@@ -15,6 +15,8 @@ Differences from the original:
   files in the buildpack's `{{ tempDir }}`.
 - The unit tests run headless in the build (`testAngular`), and the workflow runs them before
   it builds the image.
+- Playwright e2e tests in `e2e/` replace Protractor. They mock the API in the browser, and the
+  workflow runs them against the image it has just built, before it publishes the image.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
   each push to `mikkosuonio/development`, and the tag's name for each `v*` tag.
 
@@ -31,6 +33,16 @@ Run the following command to build the project.
 
 ```shell
 ./gradlew buildAngular
+```
+
+Run the e2e tests against the built SPA, which Playwright serves from `dist/public`. They need
+Node.js 24 (`e2e/.nvmrc`); the build itself stays on Node.js 16. `e2e/playwright.config.ts`
+lists the settings, such as `UI_BASE_URL` to test a running container instead.
+
+```shell
+cd e2e
+npm ci && npx playwright install chromium-headless-shell
+npx playwright test
 ```
 
 Then, package it in an NGINX container using the [pack](https://buildpacks.io/docs/tools/pack/)

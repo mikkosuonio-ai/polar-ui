@@ -1,0 +1,11 @@
+{
+  "name": "polar-ui-e2e",
+  "private": true,
+  "description": "Browser tests of polar-ui's built SPA, with the API mocked in the browser",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

@@ -1,0 +1,36 @@
+import { test, expect, NORTHERN_LIGHTS, POLAR_JOURNEY, bookCard, cards, failedCall } from './polar';
+
+test('the book list shows the catalog', async ({ page }) => {
+  await page.goto('/#/browse-books');
+  await expect(page.getByRole('heading', { name: 'Browse Books' })).toBeVisible();
+  await expect(cards(page)).toHaveCount(2);
+  const card = bookCard(page, NORTHERN_LIGHTS.isbn);
+  await expect(card.locator('mat-card-title')).toContainText(NORTHERN_LIGHTS.title);
+  await expect(card).toContainText(`Author: ${NORTHERN_LIGHTS.author}`);
+  await expect(card).toContainText(`Publisher: ${NORTHERN_LIGHTS.publisher}`);
+  await expect(card).toContainText(`Price: $${NORTHERN_LIGHTS.price}`);
+  await expect(card.getByRole('button', { name: 'ORDER' })).toBeVisible();
+  await expect(bookCard(page, POLAR_JOURNEY.isbn)).toContainText(POLAR_JOURNEY.title);
+});
+
+test('an empty catalog shows an empty book list', async ({ page, api }) => {
+  api.books = [];
+  await page.goto('/#/browse-books');
+  await expect(page.getByRole('heading', { name: 'Browse Books' })).toBeVisible();
+  await expect.poll(() => api.callsTo('GET', '/books').length).toBe(1);
+  await expect(page.locator('mat-spinner')).toHaveCount(0);
+  await expect(cards(page)).toHaveCount(0);
+});
+
+// BookListComponent has no error handler: the list stays empty, without a message, and the
+// visitor isn't sent to log in.
+test('a failing catalog leaves the book list empty', async ({ page, api, problems }) => {
+  problems.allow(...failedCall('GET', '/books', 500));
+  api.fail('GET', '/books', 500);
+  const books = page.waitForResponse(r => r.url().endsWith('/books'));
+  await page.goto('/#/browse-books');
+  expect((await books).status()).toBe(500);
+  await expect(page.getByRole('heading', { name: 'Browse Books' })).toBeVisible();
+  await expect(cards(page)).toHaveCount(0);
+  await expect(page).toHaveURL(/#\/browse-books$/);
+});
