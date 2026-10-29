@@ -53,7 +53,7 @@ Run the following command to build the project.
 ```
 
 Run the e2e tests against the built SPA, which Playwright serves from `dist/public`. They need
-Node.js 24 (`e2e/.nvmrc`); the build itself stays on Node.js 16. `e2e/playwright.config.ts`
+Node.js 24 (`e2e/.nvmrc`); the build downloads its own (`build.gradle`). `e2e/playwright.config.ts`
 lists the settings, such as `UI_BASE_URL` to test a running container instead, or
 `UI_TEST_CHANNEL=chrome` to use an installed Google Chrome, as CI does, and skip
 `npx playwright install`.

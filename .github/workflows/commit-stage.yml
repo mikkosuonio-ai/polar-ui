@@ -52,7 +52,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      # testAngular downloads Node.js 16 and runs the unit tests once in the runner's Chrome
+      # testAngular downloads the Node.js in build.gradle and runs the unit tests once in the runner's Chrome
       # (CHROME_BIN), writing JUnit results to build/test-results/testAngular.
       - name: Unit tests
         run: |
