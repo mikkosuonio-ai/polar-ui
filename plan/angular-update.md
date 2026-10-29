@@ -131,17 +131,16 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
 4. **Fonts and icons hosted by the app — deferred** (2026-10-29). Tried, and reverted before v1.3.0: through edge-service the font files got 401, since its `SecurityConfig` permits, and its `spa-route` forwards, only `/`, `/*.css`, `/*.js` and `/favicon.ico`. The fork's own tests serve `dist/public` directly, so only the main repository's browser tests found it.
    - **Comes back** once edge-service lets `/media/**` through (asked of the main repository's session), with the font files under `media/`: `resourcesOutputPath: "media"` on the `browser` builder, which is where the `application` builder puts them by default.
    - The visual run (step 5) loads Google Fonts meanwhile, so the screenshots show what users see.
-   - **What was tried:
-   - `@fontsource/roboto` (5.3.x, OFL-1.1; weights 300/400/500) and `material-icons` (1.13.x, Apache-2.0) go into the `styles` of `angular.json` (build and test);
-   - the Google Fonts `<link>`s leave `index.html`.
-   - Why:
-     - the production build inlines Google's font CSS and needs the network for it. It still does with the `application` builder (`optimization.fonts.inline` defaults to true, and an offline build fails with "Inlining of fonts failed");
-     - the page stops depending on Google.
-   - `MatIcon`'s default font set class `material-icons` works with the package without configuration.
-   - Doing it before the baseline means the baseline shows real icons.
-   - The tests' blocking of the font hosts then blocks nothing.
+   - **What was tried, and comes back** (in `media/`):
+     - `@fontsource/roboto` (5.3.x, OFL-1.1; weights 300/400/500) and `material-icons` (1.13.x, Apache-2.0) go into the `styles` of `angular.json` (build and test);
+     - the Google Fonts `<link>`s leave `index.html`.
+     - Why:
+       - the production build inlines Google's font CSS and needs the network for it. It still does with the `application` builder (`optimization.fonts.inline` defaults to true, and an offline build fails with "Inlining of fonts failed");
+       - the page stops depending on Google.
+     - `MatIcon`'s default font set class `material-icons` works with the package without configuration.
+     - The tests' blocking of the font hosts then blocks nothing. In the fork's copy of `polar.ts`, the allowance for them goes, so that a request to Google fails a test.
 5. **Baseline of the look and accessibility** (not gating):
-   - `e2e/tests/screens.spec.ts`, tagged `@visual` and run only with `UI_TEST_VISUAL=1` (`grep`/`grepInvert` in `playwright.config.ts`);
+   - `e2e/tests/screens.spec.ts`, tagged `@visual` and run only with `UI_TEST_VISUAL=<directory>` (`grep`/`grepInvert` in `playwright.config.ts`);
    - full-page screenshots at a fixed viewport, plus an axe-core report (`@axe-core/playwright`) per page:
      - anonymous Browse Books;
      - the menu open as an employee;
