@@ -20,3 +20,12 @@
   z-index: 1;
 }
   
+/* MDC list items don't align an inline icon with the text after it. */
+.mat-mdc-nav-list mat-icon {
+  vertical-align: middle;
+}
+
+/* The padding legacy cards had; MDC cards leave it to their content. */
+.page {
+  padding: 16px;
+}

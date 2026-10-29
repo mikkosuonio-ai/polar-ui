@@ -1,8 +1,8 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogModule as MatDialogModule, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';

@@ -21,11 +21,7 @@
     margin-right: 0;
 }
 
-.card-actions {
-    text-align: right;
-}
-
-.mat-card-header {
+.mat-mdc-card-header {
     display: block;
     margin: auto;
     text-align: center;
