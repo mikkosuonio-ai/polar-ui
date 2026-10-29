@@ -20,6 +20,9 @@ import { join } from 'node:path';
 //   UI_TEST_OUTPUT  directory for traces and screenshots of failed tests (default test-results)
 //   UI_TEST_JUNIT   also write the results to this file with the JUnit reporter
 //   UI_TEST_REPORT  also write the HTML report to this directory
+//   UI_TEST_VISUAL  run only the @visual tests (tests/screens.spec.ts) instead, which save a
+//                   screenshot and an axe-core report of each main page to this directory, such
+//                   as ../plan/screens/v13
 const port = Number(process.env.PORT ?? 4300);
 const baseURL = process.env.UI_BASE_URL ?? `http://127.0.0.1:${port}`;
 const dist = join(__dirname, '..', 'dist', 'public');
@@ -35,6 +38,7 @@ export default defineConfig({
   // Two CPUs on the development server and on GitHub's runners.
   workers: 2,
   forbidOnly: !!process.env.CI,
+  ...(process.env.UI_TEST_VISUAL ? { grep: /@visual/ } : { grepInvert: /@visual/ }),
   retries: 0,
   timeout: 30_000,
   expect: { timeout: 5_000 },
