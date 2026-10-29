@@ -25,6 +25,16 @@ Differences from the original:
   each push to `mikkosuonio/development`, and the tag's name alone for each `v*` tag on that
   branch. A `v*` tag elsewhere fails the workflow.
 
+### Releases
+
+The update to Angular 22 and Node.js 24 is planned in
+[`plan/angular-update.md`](plan/angular-update.md).
+
+- **v1.3.0** (Angular 13): the fonts and icons come from the SPA, not from Google Fonts. The
+  page is titled "Polar Bookshop". The look is otherwise unchanged
+  ([`plan/screens/v13`](plan/screens/v13)).
+- **v1.2.1** and earlier: see git history.
+
 ## Instructions
 
 Run the unit tests once in headless Chrome. Set `CHROME_BIN` if Chrome isn't on the `PATH`. The

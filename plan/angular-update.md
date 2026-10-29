@@ -339,7 +339,7 @@ Made in that repository by its own session. Selector changes go into both copies
 Before each heavy task: run `free -h`, run one heavy task at a time, and size the work to the available memory. Another session's dependency update may be running, and the smoke script's lock doesn't cover builds. Afterwards: `./gradlew --stop`, remove the containers and stop the Podman socket if it was started.
 
 1. **Unit tests and build:**
-   - `./gradlew testAngular` and then `./gradlew buildAngular` (with `CHROME_BIN=~/.cache/ms-playwright/chromium-1228/chrome-linux/chrome` while Karma is in use);
+   - `./gradlew testAngular` and then `./gradlew buildAngular` (with `CHROME_BIN=~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome` while Karma is in use);
    - expect 35 or more tests passing, and no budget errors;
    - write down the bundle sizes.
 2. **e2e against `dist/public`:** `npx playwright test` with Node.js 24, from `e2e/` until step 10 and from the root after it.
