@@ -7,9 +7,11 @@
       (submitted)="onSubmit($event)">
     </app-book-form>
   </div>
-}
-
-@if (!book) {
+} @else if (loadFailed) {
+  <div class="grid-container">
+    <p class="load-error">The book can't be loaded. Please try again later.</p>
+  </div>
+} @else {
   <div class="grid-container">
     <mat-spinner aria-label="Loading"></mat-spinner>
   </div>

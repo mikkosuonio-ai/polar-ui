@@ -1,6 +1,6 @@
-@if (books) {
-  <div class="grid-container">
-    <h1 class="mat-h1">Browse Books</h1>
+<div class="grid-container">
+  <h1 class="mat-h1">Browse Books</h1>
+  @if (books) {
     <mat-grid-list [cols]="colNumber | async" rowHeight="400px">
       @for (book of books; track book) {
         <mat-grid-tile colspan="1" rowspan="1">
@@ -32,11 +32,9 @@
         </mat-grid-tile>
       }
     </mat-grid-list>
-  </div>
-}
-
-@if (!books) {
-  <div class="grid-container">
+  } @else if (loadFailed) {
+    <p class="load-error">The books can't be loaded. Please try again later.</p>
+  } @else {
     <mat-spinner aria-label="Loading"></mat-spinner>
-  </div>
-}
+  }
+</div>

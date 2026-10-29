@@ -8,6 +8,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-order-dialog',
@@ -23,6 +24,7 @@ export class OrderDialogComponent {
   dialogRef = inject<MatDialogRef<OrderDialogComponent>>(MatDialogRef);
   book = inject<Book>(MAT_DIALOG_DATA);
   private orderService = inject(OrderService);
+  private snackBar = inject(MatSnackBar);
 
   bookQuantity = 1;
 
@@ -32,7 +34,10 @@ export class OrderDialogComponent {
       quantity: this.bookQuantity
     };
     this.orderService.submitOrder(orderRequest)
-      .subscribe(() => this.dialogRef.close());
+      .subscribe({
+        next: () => this.dialogRef.close(),
+        error: () => this.snackBar.open("The order can't be submitted. Please try again.", 'Close')
+      });
   }
 
 }

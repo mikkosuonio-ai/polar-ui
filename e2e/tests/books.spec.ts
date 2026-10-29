@@ -24,13 +24,15 @@ test('an empty catalog shows an empty book list', async ({ page, api }) => {
 
 // BookListComponent has no error handler: the list stays empty, without a message, and the
 // visitor isn't sent to log in.
-test('a failing catalog leaves the book list empty', async ({ page, api, problems }) => {
+test('a failing catalog says the books cannot be loaded', async ({ page, api, problems }) => {
   problems.allow(...failedCall('GET', '/books', 500));
   api.fail('GET', '/books', 500);
   const books = page.waitForResponse(r => r.url().endsWith('/books'));
   await page.goto('/#/browse-books');
   expect((await books).status()).toBe(500);
   await expect(page.getByRole('heading', { name: 'Browse Books' })).toBeVisible();
+  await expect(page.getByText("The books can't be loaded. Please try again later.")).toBeVisible();
+  await expect(page.locator('mat-spinner')).toHaveCount(0);
   await expect(cards(page)).toHaveCount(0);
   await expect(page).toHaveURL(/#\/browse-books$/);
 });

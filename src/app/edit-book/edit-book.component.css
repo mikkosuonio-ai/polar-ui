@@ -11,3 +11,7 @@
     display: block;
     margin: auto;
 }
+
+.load-error {
+    text-align: center;
+}

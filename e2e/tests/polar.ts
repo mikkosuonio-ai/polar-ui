@@ -107,12 +107,11 @@ export class Api {
 // The requests that go to the API rather than to the SPA's files.
 const API_PATHS = /^\/(user|books|orders|oauth2|logout)(\/|$)/;
 
-// What a page does on every anonymous load: GET /user answers 401, and AppComponent, which
-// subscribes to it without an error handler, logs the error.
+// What a page does on every anonymous load: GET /user answers 401. AppComponent handles it, so
+// Angular logs no error for it.
 const ANONYMOUS_USER = [
   /^HTTP 401 GET .*\/user$/,
   /^console: Failed to load resource: the server responded with a status of 401 .*\[.*\/user\]$/,
-  /^Angular ERROR 401 .*\/user$/,
 ];
 
 // Patterns for the problems a test expects of an HTTP call: its response with STATUS, the

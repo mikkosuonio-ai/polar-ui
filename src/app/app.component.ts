@@ -42,11 +42,15 @@ export class AppComponent implements OnInit {
     );
 
   ngOnInit(): void {
-    this.authService.authenticate().subscribe(user => {
-      if (user) {
-        this.isAuthenticated = true;
-        this.user = user;
-      }
+    // GET /user answers 401 for an anonymous visitor, who stays logged out.
+    this.authService.authenticate().subscribe({
+      next: user => {
+        if (user) {
+          this.isAuthenticated = true;
+          this.user = user;
+        }
+      },
+      error: () => this.isAuthenticated = false
     });
   }
 

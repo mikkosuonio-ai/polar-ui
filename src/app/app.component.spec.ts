@@ -67,9 +67,8 @@ describe('AppComponent', () => {
   describe('for an anonymous visitor', () => {
     let onUnhandledError: typeof config.onUnhandledError;
 
-    // AppComponent subscribes to GET /user without an error handler, so RxJS reports its 401 as
-    // unhandled in a timeout, which would otherwise fail a later spec. The specs fake the timers
-    // and run that timeout.
+    // AppComponent handles GET /user's 401, so RxJS has no unhandled error to report, which it
+    // would do in a timeout. The specs fake the timers and run any such timeout.
     beforeEach(() => {
       vi.useFakeTimers();
       onUnhandledError = config.onUnhandledError;
@@ -84,7 +83,7 @@ describe('AppComponent', () => {
     it('shows "Log In" and only "Browse Books" in the menu', () => {
       const fixture = render();
       vi.runAllTimers();
-      expect(config.onUnhandledError).toHaveBeenCalled();
+      expect(config.onUnhandledError).not.toHaveBeenCalled();
       expect(texts(fixture, 'mat-toolbar button')).toContain('Log In');
       expect(texts(fixture, 'mat-toolbar button')).not.toContain('Log Out');
       expect(menuLinks(fixture)).toEqual(['Browse Books']);

@@ -55,10 +55,10 @@ describe('OrderListComponent', () => {
     expect(totals([order(42, 19.9, 3), order(43, 12.5, 2)])).toEqual(['Total: $59.70', 'Total: $25.00']);
   });
 
-  // The template formats the total with toPrecision(4): four significant digits, so a total
-  // under $10 gets three decimals, and one of $1000 or more loses its cents.
-  it('shows the total with four significant digits', () => {
-    expect(totals([order(1, 9.9, 1), order(2, 123.45, 1), order(3, 1234.5, 1)]))
-      .toEqual(['Total: $9.900', 'Total: $123.5', 'Total: $1235']);
+  // The template formats the total as dollars with the currency pipe (finding 40 in the main
+  // repository: toPrecision(4) gave $9.900, $1235 and exponents from $10,000 up).
+  it('shows the total in dollars and cents', () => {
+    expect(totals([order(1, 9.9, 1), order(2, 123.45, 1), order(3, 1234.5, 1), order(4, 5000, 3)]))
+      .toEqual(['Total: $9.90', 'Total: $123.45', 'Total: $1,234.50', 'Total: $15,000.00']);
   });
 });

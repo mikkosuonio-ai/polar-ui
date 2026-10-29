@@ -1,4 +1,4 @@
-import { test, expect, CUSTOMER, NORTHERN_LIGHTS, type Order, bookCard, cards, orderCard } from './polar';
+import { test, expect, CUSTOMER, failedCall, NORTHERN_LIGHTS, type Order, bookCard, cards, orderCard } from './polar';
 
 test.beforeEach(({ api }) => {
   api.user = CUSTOMER;
@@ -40,6 +40,22 @@ test('"My Orders" shows each order with its total', async ({ page, api }) => {
   await expect(orderCard(page, 42)).toContainText('Total: $59.70');
   await expect(orderCard(page, 43)).toContainText('Status: DISPATCHED');
   await expect(orderCard(page, 43)).toContainText('Total: $25.00');
-  // toPrecision(4) gives a total under $10 three decimals.
-  await expect(orderCard(page, 44)).toContainText('Total: $9.900');
+  // In dollars and cents (finding 40 in the main repository: toPrecision(4) gave $9.900).
+  await expect(orderCard(page, 44)).toContainText('Total: $9.90');
+});
+
+test('failing orders say so', async ({ page, api, problems }) => {
+  problems.allow(...failedCall('POST', '/orders', 503), ...failedCall('GET', '/orders', 500));
+  api.fail('POST', '/orders', 503);
+  await page.goto('/#/browse-books');
+  await bookCard(page, NORTHERN_LIGHTS.isbn).getByRole('button', { name: 'ORDER' }).click();
+  const dialog = page.getByRole('dialog');
+  await dialog.getByRole('button', { name: 'Submit Order' }).click();
+  await expect(page.getByText("The order can't be submitted. Please try again.")).toBeVisible();
+  await expect(dialog).toBeVisible();
+
+  api.fail('GET', '/orders', 500);
+  await page.goto('/#/my-orders');
+  await expect(page.getByText("The orders can't be loaded. Please try again later.")).toBeVisible();
+  await expect(page.locator('mat-spinner')).toHaveCount(0);
 });

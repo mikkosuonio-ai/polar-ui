@@ -13,6 +13,7 @@ import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem } from '@angular/material/list';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -31,8 +32,11 @@ export class BookListComponent implements OnInit {
   private bookService = inject(BookService);
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
-  books: Book[] = [];
+  // Undefined until the books are loaded, so the page shows a spinner meanwhile.
+  books: Book[] | undefined;
+  loadFailed = false;
 
   colNumber = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => matches ? 2 : 3));
@@ -42,13 +46,17 @@ export class BookListComponent implements OnInit {
   }
 
   loadBooks(): void {
-    this.bookService.getBooks().subscribe(books => this.books = books);
+    this.bookService.getBooks().subscribe({
+      next: books => this.books = books,
+      error: () => this.loadFailed = true
+    });
   }
 
   removeBook(isbn: string): void {
     this.bookService.deleteBook(isbn)
-      .subscribe(() => {
-        this.loadBooks();
+      .subscribe({
+        next: () => this.loadBooks(),
+        error: () => this.snackBar.open("The book can't be removed. Please try again.", 'Close')
       });
   }
 

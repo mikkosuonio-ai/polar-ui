@@ -23,3 +23,12 @@
 .mat-h1 {
     text-align: center;
 }
+
+.load-error {
+    text-align: center;
+}
+
+.mat-mdc-progress-spinner {
+    display: block;
+    margin: auto;
+}

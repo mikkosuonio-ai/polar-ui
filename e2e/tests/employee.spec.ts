@@ -62,7 +62,6 @@ test('removing a book loads the book list again', async ({ page, api }) => {
 // it with 503 (finding 38 in the main repository's review), EditBookComponent, which has no
 // error handler, shows its spinner for good. It should say that the book can't be loaded.
 test('the edit page says so when the book cannot be loaded', async ({ page, api, problems }) => {
-  test.fail(true, 'EditBookComponent has no error handling (finding 38 in the main repository)');
   problems.allow(...failedCall('GET', `/books/${NORTHERN_LIGHTS.isbn}`, 503));
   api.fail('GET', `/books/${NORTHERN_LIGHTS.isbn}`, 503);
   const book = page.waitForResponse(r => r.url().endsWith(`/books/${NORTHERN_LIGHTS.isbn}`));
@@ -70,4 +69,33 @@ test('the edit page says so when the book cannot be loaded', async ({ page, api,
   expect((await book).status()).toBe(503);
   await expect(page.locator('mat-spinner')).toHaveCount(0);
   await expect(page.getByText(/can't be loaded|cannot be loaded|try again/i)).toBeVisible();
+});
+
+// A failed write leaves the page as it was and says so (finding 39 in the main repository).
+test('a failed create, update or remove says so', async ({ page, api, problems }) => {
+  problems.allow(...failedCall('POST', '/books', 503), ...failedCall('PUT', `/books/${NORTHERN_LIGHTS.isbn}`, 503),
+    ...failedCall('DELETE', `/books/${NORTHERN_LIGHTS.isbn}`, 503));
+  api.fail('POST', '/books', 503);
+  api.fail('PUT', `/books/${NORTHERN_LIGHTS.isbn}`, 503);
+  api.fail('DELETE', `/books/${NORTHERN_LIGHTS.isbn}`, 503);
+  const dismiss = () => page.getByRole('button', { name: 'Close' }).click();
+
+  await page.goto('/#/add-book');
+  await page.getByRole('textbox', { name: 'ISBN' }).fill('9781234567');
+  await page.getByRole('button', { name: 'Create Book' }).click();
+  await expect(page.getByText("The book can't be created. Please try again.")).toBeVisible();
+  await expect(page).toHaveURL(/#\/add-book$/);
+  await dismiss();
+
+  await page.goto(`/#/edit-book/${NORTHERN_LIGHTS.isbn}`);
+  await page.getByRole('button', { name: 'Update Book' }).click();
+  await expect(page.getByText("The book can't be updated. Please try again.")).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`#/edit-book/${NORTHERN_LIGHTS.isbn}$`));
+  await dismiss();
+
+  await page.goto('/#/browse-books');
+  await bookCard(page, NORTHERN_LIGHTS.isbn).getByRole('button', { name: 'Toggle menu' }).click();
+  await page.getByRole('menuitem', { name: 'Remove' }).click();
+  await expect(page.getByText("The book can't be removed. Please try again.")).toBeVisible();
+  await expect(bookCard(page, NORTHERN_LIGHTS.isbn)).toBeVisible();
 });
