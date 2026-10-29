@@ -128,8 +128,8 @@ export function failedCall(method: string, path: string, status: number): RegExp
 
 type Problems = { allow(...patterns: RegExp[]): void };
 
-// Google Fonts: the SPA serves its fonts and icons itself (@fontsource/roboto, material-icons).
-// The tests block Google's font hosts without allowing it, so a request to them fails the test.
+// Google Fonts: index.html links its stylesheets. The tests block them, so that they don't
+// depend on Google; the icons then show their ligature names, and the text a fallback font.
 const FONTS = /^https:\/\/fonts\.(googleapis|gstatic)\.com\//;
 
 export const test = base.extend<{ problems: Problems; api: Api }>({
@@ -137,7 +137,7 @@ export const test = base.extend<{ problems: Problems; api: Api }>({
   // request, an uncaught page error, or a console error.
   problems: [async ({ page }, use) => {
     const seen: string[] = [];
-    const allowed = [...ANONYMOUS_USER];
+    const allowed = [...ANONYMOUS_USER, new RegExp(`^(request failed GET |console: .*\\[)${FONTS.source.slice(1)}`)];
 
     await page.route(FONTS, route => route.abort('blockedbyclient'));
     // Angular's ErrorHandler logs console.error('ERROR', error). Name an HttpErrorResponse by its
