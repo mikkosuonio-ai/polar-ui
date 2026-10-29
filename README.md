@@ -32,6 +32,11 @@ Differences from the original:
 The update to Angular 22 and Node.js 24 is planned in
 [`plan/angular-update.md`](plan/angular-update.md).
 
+- **v2.0.0** (Angular 22, Node.js 24): the fonts and icons come from the SPA, under `media/`,
+  not from Google Fonts; the look is otherwise v1.4.0's. The build runs on Node.js 24 with
+  the esbuild-based application builder, the unit tests on Vitest, and the e2e tests with
+  `ng e2e` from the root project. HttpClient goes through `provideHttpClient`, still with XHR,
+  and still sends the raw XSRF-TOKEN cookie as X-XSRF-TOKEN.
 - **v1.4.0** (Angular 16): Angular Material's MDC components replace the legacy ones, which
   changes the look ([`plan/screens/mdc`](plan/screens/mdc) against `v13`): filled form fields
   with floating labels, Material's MDC typography with wider letter spacing, and new spacing in
