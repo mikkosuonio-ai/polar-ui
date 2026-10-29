@@ -3,15 +3,23 @@ import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../book.service';
 import { OrderService } from '../order.service';
 import { Book } from '../types';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-order-dialog',
   templateUrl: './order-dialog.component.html',
   styleUrls: ['./order-dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  imports: [
+    MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, FormsModule,
+    MatDialogActions, MatButton
+  ]
 })
 export class OrderDialogComponent implements OnInit {
 

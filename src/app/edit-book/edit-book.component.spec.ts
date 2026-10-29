@@ -13,14 +13,13 @@ describe('EditBookComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditBookComponent ],
-      imports: [ RouterTestingModule ],
+      imports: [RouterTestingModule, EditBookComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ isbn: '1234567891' }) } } }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   });

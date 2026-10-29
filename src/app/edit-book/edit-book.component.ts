@@ -2,13 +2,15 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { Book } from '../types';
+import { BookFormComponent } from '../book-form/book-form.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-edit-book',
   templateUrl: './edit-book.component.html',
   styleUrls: ['./edit-book.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  imports: [BookFormComponent, MatProgressSpinner]
 })
 export class EditBookComponent implements OnInit {
 

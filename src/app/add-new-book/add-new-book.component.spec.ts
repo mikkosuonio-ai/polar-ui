@@ -12,10 +12,9 @@ describe('AddNewBookComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddNewBookComponent ],
-      imports: [ RouterTestingModule ],
-      providers: [ provideHttpClient(), provideHttpClientTesting() ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      imports: [RouterTestingModule, AddNewBookComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   });

@@ -3,16 +3,28 @@ import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Book } from '../types';
 import { BookService } from '../book.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { MatList, MatListItem } from '@angular/material/list';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-book-list',
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  imports: [
+    MatGridList, MatGridTile, MatCard, MatCardHeader, MatCardTitle, MatIconButton, MatMenuTrigger,
+    MatIcon, MatMenu, MatMenuItem, RouterLink, MatCardContent, MatList, MatListItem,
+    MatCardActions, MatButton, MatProgressSpinner, AsyncPipe
+  ]
 })
 export class BookListComponent implements OnInit {
 

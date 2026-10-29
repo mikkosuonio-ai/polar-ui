@@ -22,15 +22,14 @@ describe('OrderDialogComponent', () => {
   beforeEach(async () => {
     dialogRef = { close: vi.fn() } as unknown as Mocked<MatDialogRef<OrderDialogComponent>>;
     await TestBed.configureTestingModule({
-      declarations: [ OrderDialogComponent ],
-      imports: [ FormsModule ],
+      imports: [FormsModule, OrderDialogComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: MatDialogRef, useValue: dialogRef },
         { provide: MAT_DIALOG_DATA, useValue: book }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
     httpTestingController = TestBed.inject(HttpTestingController);

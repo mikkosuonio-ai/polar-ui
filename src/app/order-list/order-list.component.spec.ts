@@ -20,9 +20,9 @@ describe('OrderListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OrderListComponent ],
-      providers: [ provideHttpClient(), provideHttpClientTesting() ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      imports: [OrderListComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
     httpTestingController = TestBed.inject(HttpTestingController);

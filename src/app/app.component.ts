@@ -6,13 +6,24 @@ import { OnInit } from '@angular/core';
 import { AuthService } from './auth.service';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { User } from './types';
+import { MatSidenavContainer, MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatNavList, MatListItem } from '@angular/material/list';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  imports: [
+    MatSidenavContainer, MatSidenav, MatToolbar, MatNavList, MatListItem, RouterLink, MatIcon,
+    MatSidenavContent, MatIconButton, MatButton, MatCard, RouterOutlet, AsyncPipe
+  ]
 })
 export class AppComponent implements OnInit {
 

@@ -15,56 +15,56 @@ describe('BookService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
-    });
-    service = TestBed.inject(BookService);
-    httpTestingController = TestBed.inject(HttpTestingController);
+        providers: [provideHttpClient(), provideHttpClientTesting()]
+      });
+      service = TestBed.inject(BookService);
+      httpTestingController = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    httpTestingController.verify();
+      httpTestingController.verify();
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+      expect(service).toBeTruthy();
   });
 
   it('gets the books', () => {
-    let books: Book[] | undefined;
-    service.getBooks().subscribe(b => books = b);
-    const request = httpTestingController.expectOne({ method: 'GET', url: '/books' });
-    request.flush([book]);
-    expect(books).toEqual([book]);
+      let books: Book[] | undefined;
+      service.getBooks().subscribe(b => books = b);
+      const request = httpTestingController.expectOne({ method: 'GET', url: '/books' });
+      request.flush([book]);
+      expect(books).toEqual([book]);
   });
 
   it('gets a book by its ISBN', () => {
-    let found: Book | undefined;
-    service.getBookByIsbn(book.isbn).subscribe(b => found = b);
-    httpTestingController.expectOne({ method: 'GET', url: '/books/1234567891' }).flush(book);
-    expect(found).toEqual(book);
+      let found: Book | undefined;
+      service.getBookByIsbn(book.isbn).subscribe(b => found = b);
+      httpTestingController.expectOne({ method: 'GET', url: '/books/1234567891' }).flush(book);
+      expect(found).toEqual(book);
   });
 
   it('adds a book', () => {
-    service.addBook(book).subscribe();
-    const request = httpTestingController.expectOne({ method: 'POST', url: '/books' });
-    expect(request.request.body).toEqual(book);
-    expect(request.request.headers.get('Content-Type')).toBe('application/json');
-    request.flush(book, { status: 201, statusText: 'Created' });
+      service.addBook(book).subscribe();
+      const request = httpTestingController.expectOne({ method: 'POST', url: '/books' });
+      expect(request.request.body).toEqual(book);
+      expect(request.request.headers.get('Content-Type')).toBe('application/json');
+      request.flush(book, { status: 201, statusText: 'Created' });
   });
 
   it('edits a book at its ISBN', () => {
-    service.editBook(book).subscribe();
-    const request = httpTestingController.expectOne({ method: 'PUT', url: '/books/1234567891' });
-    expect(request.request.body).toEqual(book);
-    expect(request.request.headers.get('Content-Type')).toBe('application/json');
-    request.flush(book);
+      service.editBook(book).subscribe();
+      const request = httpTestingController.expectOne({ method: 'PUT', url: '/books/1234567891' });
+      expect(request.request.body).toEqual(book);
+      expect(request.request.headers.get('Content-Type')).toBe('application/json');
+      request.flush(book);
   });
 
   it('deletes a book by its ISBN', () => {
-    let deleted = false;
-    service.deleteBook(book.isbn).subscribe(() => deleted = true);
-    httpTestingController.expectOne({ method: 'DELETE', url: '/books/1234567891' })
-      .flush(null, { status: 204, statusText: 'No Content' });
-    expect(deleted).toBe(true);
+      let deleted = false;
+      service.deleteBook(book.isbn).subscribe(() => deleted = true);
+      httpTestingController.expectOne({ method: 'DELETE', url: '/books/1234567891' })
+        .flush(null, { status: 204, statusText: 'No Content' });
+      expect(deleted).toBe(true);
   });
-});
+    });

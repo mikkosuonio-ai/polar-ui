@@ -10,9 +10,8 @@ describe('BookFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BookFormComponent ],
-      imports: [ FormsModule ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      imports: [FormsModule, BookFormComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   });
