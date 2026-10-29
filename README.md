@@ -17,8 +17,9 @@ Differences from the original:
   it builds the image.
 - No linter for now: tslint and codelyzer are gone, and angular-eslint is to come with the
   Angular update.
-- Playwright e2e tests in `e2e/` replace Protractor. They mock the API in the browser, and the
-  workflow runs them against the image it has just built, before it publishes the image.
+- Playwright e2e tests in `e2e/` replace Protractor, run with `ng e2e`
+  (`playwright-ng-schematics`). They mock the API in the browser, and the workflow runs them
+  against the image it has just built, before it publishes the image.
 - The workflow publishes the image as `ghcr.io/mikkosuonio-ai/polar-ui`: `sha-<commit>` for
   each push to `mikkosuonio/development`, and the tag's name alone for each `v*` tag on that
   branch. A `v*` tag elsewhere fails the workflow.
@@ -52,16 +53,15 @@ Run the following command to build the project.
 ./gradlew buildAngular
 ```
 
-Run the e2e tests against the built SPA, which Playwright serves from `dist/public`. They need
-Node.js 24 (`e2e/.nvmrc`); the build downloads its own (`build.gradle`). `e2e/playwright.config.ts`
-lists the settings, such as `UI_BASE_URL` to test a running container instead, or
-`UI_TEST_CHANNEL=chrome` to use an installed Google Chrome, as CI does, and skip
-`npx playwright install`.
+Run the e2e tests against the built SPA, which Playwright serves from `dist/public`. They are
+part of the root project and run with `ng e2e`, on Node.js 24 (`.nvmrc`, the version the build
+downloads too). `e2e/playwright.config.ts` lists the settings, such as `UI_BASE_URL` to test a
+running container instead, or `UI_TEST_CHANNEL=chrome` to use an installed Google Chrome, as CI
+does, and skip `npx playwright install`.
 
 ```shell
-cd e2e
 npm ci && npx playwright install chromium-headless-shell
-npx playwright test
+npx ng e2e
 ```
 
 Then, package it in an NGINX container using the [pack](https://buildpacks.io/docs/tools/pack/)

@@ -113,16 +113,12 @@ jobs:
           category: image
       # The e2e tests run against the image just built, so its nginx config is tested too. They
       # mock the API in the browser, so they need no backend.
+      # The e2e tests' packages are the root project's, which the Gradle build has installed. No
+      # browser to install: the tests use the runner's Google Chrome (UI_TEST_CHANNEL).
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
-          node-version-file: e2e/.nvmrc
-          cache: npm
-          cache-dependency-path: e2e/package-lock.json
-      # No browser to install: the tests use the runner's Google Chrome (UI_TEST_CHANNEL).
-      - name: Install the e2e tests' packages
-        working-directory: e2e
-        run: npm ci --no-audit --no-fund
+          node-version-file: .nvmrc
       - name: Start the image
         run: |
           docker run -d --name polar-ui --publish 9004:9004 --env PORT=9004 polar-ui
@@ -132,15 +128,15 @@ jobs:
           done
           docker logs polar-ui
           exit 1
+      # The paths are relative to e2e/, playwright.config.ts's directory.
       - name: e2e tests
         id: e2e
-        working-directory: e2e
         env:
           UI_BASE_URL: http://localhost:9004
           UI_TEST_CHANNEL: chrome
           UI_TEST_JUNIT: junit/TEST-e2e.xml
           UI_TEST_REPORT: playwright-report
-        run: npx playwright test
+        run: npx ng e2e
       - name: Summarize e2e tests
         if: ${{ !cancelled() && steps.e2e.outcome != 'skipped' }}
         run: python3 .github/scripts/junit-summary.py "e2e tests" e2e/junit/*.xml >> "$GITHUB_STEP_SUMMARY"

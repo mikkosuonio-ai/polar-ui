@@ -98,6 +98,12 @@
             "buildTarget": "ui-application:build"
           }
         },
+        "e2e": {
+          "builder": "playwright-ng-schematics:playwright",
+          "options": {
+            "config": "e2e/playwright.config.ts"
+          }
+        },
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
