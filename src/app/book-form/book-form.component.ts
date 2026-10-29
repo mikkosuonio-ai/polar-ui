@@ -7,7 +7,8 @@ import { Book } from '../types';
 @Component({
   selector: 'app-book-form',
   templateUrl: './book-form.component.html',
-  styleUrls: ['./book-form.component.css']
+  styleUrls: ['./book-form.component.css'],
+  standalone: false
 })
 export class BookFormComponent implements OnInit {
 

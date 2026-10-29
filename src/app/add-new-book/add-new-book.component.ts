@@ -6,7 +6,8 @@ import { Book } from '../types';
 @Component({
   selector: 'app-add-new-book',
   templateUrl: './add-new-book.component.html',
-  styleUrls: ['./add-new-book.component.css']
+  styleUrls: ['./add-new-book.component.css'],
+  standalone: false
 })
 export class AddNewBookComponent implements OnInit {
 

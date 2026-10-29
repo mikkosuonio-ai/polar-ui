@@ -9,7 +9,8 @@ import { Inject } from '@angular/core';
 @Component({
   selector: 'app-order-dialog',
   templateUrl: './order-dialog.component.html',
-  styleUrls: ['./order-dialog.component.css']
+  styleUrls: ['./order-dialog.component.css'],
+  standalone: false
 })
 export class OrderDialogComponent implements OnInit {
 

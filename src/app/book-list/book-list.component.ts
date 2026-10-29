@@ -10,7 +10,8 @@ import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
 @Component({
   selector: 'app-book-list',
   templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.css']
+  styleUrls: ['./book-list.component.css'],
+  standalone: false
 })
 export class BookListComponent implements OnInit {
 

@@ -6,7 +6,8 @@ import { Book } from '../types';
 @Component({
   selector: 'app-edit-book',
   templateUrl: './edit-book.component.html',
-  styleUrls: ['./edit-book.component.css']
+  styleUrls: ['./edit-book.component.css'],
+  standalone: false
 })
 export class EditBookComponent implements OnInit {
 
