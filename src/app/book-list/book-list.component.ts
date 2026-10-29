@@ -4,7 +4,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Book } from '../types';
 import { BookService } from '../book.service';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
 
 @Component({

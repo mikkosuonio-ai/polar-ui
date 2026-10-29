@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../book.service';
 import { OrderService } from '../order.service';
 import { Book } from '../types';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { Inject } from '@angular/core';
 
 @Component({
