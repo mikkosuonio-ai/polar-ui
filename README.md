@@ -17,6 +17,9 @@ Differences from the original:
   it builds the image.
 - No linter for now: tslint and codelyzer are gone, and angular-eslint is to come with the
   Angular update.
+- The SPA serves its fonts and icons itself (`@fontsource/roboto`, `material-icons`, under
+  `media/`) instead of loading them from Google Fonts, so neither the page nor the build depends
+  on Google. edge-service lets `/media/**` through from the main repository's 1e5acf6 on.
 - Playwright e2e tests in `e2e/` replace Protractor, run with `ng e2e`
   (`playwright-ng-schematics`). They mock the API in the browser, and the workflow runs them
   against the image it has just built, before it publishes the image.

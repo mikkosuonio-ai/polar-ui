@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Page } from '@playwright/test';
-import { test, expect, CUSTOMER, EMPLOYEE, FONTS, NORTHERN_LIGHTS, type Order, cards, openMenu } from './polar';
+import { test, expect, CUSTOMER, EMPLOYEE, NORTHERN_LIGHTS, type Order, cards, openMenu } from './polar';
 
 // Not tests: a record of how the main pages look, and what axe-core finds on them, to compare
 // before and after a change to the look, such as Angular Material's. Run only with
@@ -11,11 +11,6 @@ import { test, expect, CUSTOMER, EMPLOYEE, FONTS, NORTHERN_LIGHTS, type Order, c
 const dir = process.env.UI_TEST_VISUAL ?? '';
 
 test.use({ viewport: { width: 1280, height: 800 } });
-
-// The other tests block Google Fonts; the screenshots show the fonts and icons users see.
-test.beforeEach(async ({ page }) => {
-  await page.unroute(FONTS);
-});
 
 async function record(page: Page, name: string) {
   await page.evaluate(() => document.fonts.ready);
