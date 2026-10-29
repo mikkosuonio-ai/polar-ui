@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { Book } from '../types';
@@ -7,6 +7,7 @@ import { Book } from '../types';
   selector: 'app-add-new-book',
   templateUrl: './add-new-book.component.html',
   styleUrls: ['./add-new-book.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class AddNewBookComponent implements OnInit {

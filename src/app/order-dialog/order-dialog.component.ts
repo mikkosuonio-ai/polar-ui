@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BookService } from '../book.service';
 import { OrderService } from '../order.service';
@@ -10,6 +10,7 @@ import { Inject } from '@angular/core';
   selector: 'app-order-dialog',
   templateUrl: './order-dialog.component.html',
   styleUrls: ['./order-dialog.component.css'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class OrderDialogComponent implements OnInit {
