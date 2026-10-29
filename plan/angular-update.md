@@ -128,7 +128,10 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
    - requests carry `X-Requested-With: XMLHttpRequest`;
    - the logout form posts `_csrf` with the cookie's value;
    - a 401 on anything but `/user` goes to `/oauth2/authorization/keycloak`.
-4. **Fonts and icons hosted by the app:**
+4. **Fonts and icons hosted by the app — deferred** (2026-10-29). Tried, and reverted before v1.3.0: through edge-service the font files got 401, since its `SecurityConfig` permits, and its `spa-route` forwards, only `/`, `/*.css`, `/*.js` and `/favicon.ico`. The fork's own tests serve `dist/public` directly, so only the main repository's browser tests found it.
+   - **Comes back** once edge-service lets `/media/**` through (asked of the main repository's session), with the font files under `media/`: `resourcesOutputPath: "media"` on the `browser` builder, which is where the `application` builder puts them by default.
+   - The visual run (step 5) loads Google Fonts meanwhile, so the screenshots show what users see.
+   - **What was tried:
    - `@fontsource/roboto` (5.3.x, OFL-1.1; weights 300/400/500) and `material-icons` (1.13.x, Apache-2.0) go into the `styles` of `angular.json` (build and test);
    - the Google Fonts `<link>`s leave `index.html`.
    - Why:

@@ -28,9 +28,9 @@ Differences from the original:
 The update to Angular 22 and Node.js 24 is planned in
 [`plan/angular-update.md`](plan/angular-update.md).
 
-- **v1.3.0** (Angular 13): the fonts and icons come from the SPA, not from Google Fonts. The
-  page is titled "Polar Bookshop". The look is otherwise unchanged
-  ([`plan/screens/v13`](plan/screens/v13)).
+- **v1.3.0** (Angular 13): the page is titled "Polar Bookshop"; the look is unchanged
+  ([`plan/screens/v13`](plan/screens/v13)). The build has the node-gradle plugin 7.1.0, and
+  the e2e tests pin the CSRF token and headers the SPA sends.
 - **v1.2.1** and earlier: see git history.
 
 ## Instructions

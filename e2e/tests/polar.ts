@@ -130,7 +130,7 @@ type Problems = { allow(...patterns: RegExp[]): void };
 
 // Google Fonts: index.html links its stylesheets. The tests block them, so that they don't
 // depend on Google; the icons then show their ligature names, and the text a fallback font.
-const FONTS = /^https:\/\/fonts\.(googleapis|gstatic)\.com\//;
+export const FONTS = /^https:\/\/fonts\.(googleapis|gstatic)\.com\//;
 
 export const test = base.extend<{ problems: Problems; api: Api }>({
   // Every test fails on a browser problem it doesn't expect: a response of 400 or more, a failed

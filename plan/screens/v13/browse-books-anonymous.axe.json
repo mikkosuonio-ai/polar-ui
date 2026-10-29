@@ -4,7 +4,7 @@
     "impact": "moderate",
     "help": "All page content should be contained by landmarks",
     "targets": [
-      "span[_ngcontent-xgs-c69=\"\"]:nth-child(2)"
+      "span[_ngcontent-pfl-c69=\"\"]:nth-child(2)"
     ]
   }
 ]
