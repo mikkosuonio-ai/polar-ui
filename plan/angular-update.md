@@ -20,9 +20,25 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
 
 - **Released and verified in the main repository's CI:**
   - v1.3.0: Angular 13, preparation;
-  - v1.4.0: Angular 16 with MDC.
-- **Released, being verified there:** v2.0.0 (Angular 22, Node.js 24).
-- **Next:** step 11 (standalone, angular-eslint, budgets, gating axe), then step 12 (v2.1.0).
+  - v1.4.0: Angular 16 with MDC;
+  - v2.0.0: Angular 22, Node.js 24, self-hosted fonts;
+  - v2.0.1: standalone, angular-eslint, the axe gate.
+  - v2.1.0: findings 39 and 40 (the main repository's a12e14e, CI run 40919427025).
+- **Step 11, by the numbers:**
+  - dropping `@angular/animations` and the NgModules took the initial bundle from 972 to 869 kB;
+  - the snack bar of v2.1.0 brings it to 897 kB, so the 900 kB warning and 1 MB error budgets stay;
+  - the OnPush lint rule is off: eager change detection stays until signals.
+- **Scans after the update** (2026-10-29):
+  - **code:** no open alerts; Angular 13's and the build tools' (Node.js 16, esbuild's Go 1.17) are fixed;
+  - **image:** 140 open (3 critical, 72 high), all in the Ubuntu 22.04 packages and nginx of the pinned `builder-jammy-base:0.4.673`.
+- **Left for later:**
+  - HttpClient's fetch backend;
+  - zoneless and OnPush with signals;
+  - Material 3;
+  - Node.js 26;
+  - the moderate axe findings (landmarks, h1 on the book forms);
+  - raising the builder pin.
+- **The disk filled up once** (2026-10-29) with superseded Paketo builder images. `podman image prune` freed 21 GB.
 - **Where the run differed from the plan:**
   - **Fonts:** the first self-hosting try failed through edge-service (401 for the files at the root). They came back in v2.0.0 under `media/`, after the main repository let `/media/**` through (its 1e5acf6).
   - **HTTP backend:** Angular 22's migration kept the XHR backend (`withXhr()`), so HttpClient doesn't use fetch. Moving to fetch is left for a step of its own.
