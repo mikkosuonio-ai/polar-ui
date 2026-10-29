@@ -32,6 +32,11 @@ Differences from the original:
 The update to Angular 22 and Node.js 24 is planned in
 [`plan/angular-update.md`](plan/angular-update.md).
 
+- **v2.1.0** (Angular 22): failed HTTP calls say so. A failed load of the books, the orders or
+  the book to edit shows "… can't be loaded. Please try again later." in place of the list,
+  and a failed create, update, remove or order shows a snack bar ("… Please try again.").
+  The spinner shows while the lists load. Order totals are in dollars and cents ($9.90,
+  $1,234.50) instead of four significant digits. Findings 39 and 40 in the main repository.
 - **v2.0.1** (Angular 22): standalone components, bootstrapped without NgModules, and no
   `@angular/animations`; the initial bundle shrinks from 972 kB to 869 kB. The spinner is
   named "Loading" for screen readers. The build lints with angular-eslint, and the e2e tests
