@@ -39,8 +39,8 @@ The update to Angular 22 and Node.js 24 is planned in
 
 ## Instructions
 
-Run the unit tests once in headless Chrome. Set `CHROME_BIN` if Chrome isn't on the `PATH`. The
-JUnit results go to `build/test-results/testAngular`.
+Run the unit tests once, with Vitest in jsdom, so they need no browser. The JUnit results go to
+`build/test-results/testAngular`.
 
 ```shell
 ./gradlew testAngular

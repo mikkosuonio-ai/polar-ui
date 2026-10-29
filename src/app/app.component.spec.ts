@@ -1,7 +1,7 @@
 import { LayoutModule } from '@angular/cdk/layout';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,8 +19,8 @@ describe('AppComponent', () => {
 
   let httpTestingController: HttpTestingController;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [
         NoopAnimationsModule,
@@ -36,7 +36,7 @@ describe('AppComponent', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
     httpTestingController = TestBed.inject(HttpTestingController);
-  }));
+  });
 
   afterEach(() => {
     httpTestingController.verify();
@@ -87,35 +87,37 @@ describe('AppComponent', () => {
     let onUnhandledError: typeof config.onUnhandledError;
 
     // AppComponent subscribes to GET /user without an error handler, so RxJS reports its 401 as
-    // unhandled in a timeout, which would otherwise fail a later spec. The specs run in fakeAsync
-    // and flush that timeout.
+    // unhandled in a timeout, which would otherwise fail a later spec. The specs fake the timers
+    // and run that timeout.
     beforeEach(() => {
+      vi.useFakeTimers();
       onUnhandledError = config.onUnhandledError;
-      config.onUnhandledError = jasmine.createSpy('onUnhandledError');
+      config.onUnhandledError = vi.fn();
     });
 
     afterEach(() => {
       config.onUnhandledError = onUnhandledError;
+      vi.useRealTimers();
     });
 
-    it('shows "Log In" and only "Browse Books" in the menu', fakeAsync(() => {
+    it('shows "Log In" and only "Browse Books" in the menu', () => {
       const fixture = render();
-      flush();
+      vi.runAllTimers();
       expect(config.onUnhandledError).toHaveBeenCalled();
       expect(texts(fixture, 'mat-toolbar button')).toContain('Log In');
       expect(texts(fixture, 'mat-toolbar button')).not.toContain('Log Out');
       expect(menuLinks(fixture)).toEqual(['Browse Books']);
-    }));
+    });
 
-    it('logs in with "Log In"', fakeAsync(() => {
+    it('logs in with "Log In"', () => {
       const authService = TestBed.inject(AuthService);
-      spyOn(authService, 'login');
+      vi.spyOn(authService, 'login').mockReturnValue(undefined);
       const fixture = render();
       const logIn: HTMLButtonElement[] = Array.from(fixture.nativeElement.querySelectorAll('mat-toolbar button'));
       logIn.find(b => b.textContent!.includes('Log In'))!.click();
       expect(authService.login).toHaveBeenCalled();
-      flush();
-    }));
+      vi.runAllTimers();
+    });
   });
 
   it('shows a customer "Log Out" and "My Orders", but not "Add Book"', () => {

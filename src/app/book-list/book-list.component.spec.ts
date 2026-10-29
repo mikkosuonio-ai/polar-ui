@@ -82,12 +82,12 @@ describe('BookListComponent', () => {
   it('opens the order dialog for a book and shows the orders when it closes', () => {
     httpTestingController.expectOne('/books').flush([northernLights]);
     const dialogRef = { afterClosed: () => of(undefined) } as MatDialogRef<OrderDialogComponent>;
-    const open = spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRef);
-    const navigateByUrl = spyOn(TestBed.inject(Router), 'navigateByUrl');
+    const open = vi.spyOn(TestBed.inject(MatDialog), 'open').mockReturnValue(dialogRef);
+    const navigateByUrl = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
 
     component.createOrder(northernLights);
 
-    expect(open).toHaveBeenCalledWith(OrderDialogComponent, jasmine.objectContaining({ data: northernLights }));
+    expect(open).toHaveBeenCalledWith(OrderDialogComponent, expect.objectContaining({ data: northernLights }));
     expect(navigateByUrl).toHaveBeenCalledWith('/my-orders');
   });
 });

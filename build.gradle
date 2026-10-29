@@ -7,15 +7,15 @@ node {
 	version = "24.22.2"
 }
 
-// Runs the unit tests once, in headless Chrome (CHROME_BIN, if set), and writes their JUnit
-// results to build/test-results/testAngular.
+// Runs the unit tests once, with Vitest in jsdom, and writes their JUnit results to
+// build/test-results/testAngular.
 task testAngular(type: NpxTask) {
     command = "ng"
-    args = ["test", "--watch=false", "--browsers=ChromeHeadlessNoSandbox"]
+    args = ["test", "--watch=false"]
     dependsOn(tasks.npmInstall)
     inputs.dir("src")
     inputs.dir("node_modules")
-    inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.spec.json", "karma.conf.js")
+    inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.spec.json")
     outputs.dir("build/test-results/testAngular")
 }
 

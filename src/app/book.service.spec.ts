@@ -65,6 +65,6 @@ describe('BookService', () => {
     service.deleteBook(book.isbn).subscribe(() => deleted = true);
     httpTestingController.expectOne({ method: 'DELETE', url: '/books/1234567891' })
       .flush(null, { status: 204, statusText: 'No Content' });
-    expect(deleted).toBeTrue();
+    expect(deleted).toBe(true);
   });
 });

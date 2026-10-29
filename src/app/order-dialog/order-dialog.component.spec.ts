@@ -1,3 +1,4 @@
+import type { Mocked } from 'vitest';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -15,11 +16,11 @@ const book: Book = {
 describe('OrderDialogComponent', () => {
   let component: OrderDialogComponent;
   let fixture: ComponentFixture<OrderDialogComponent>;
-  let dialogRef: jasmine.SpyObj<MatDialogRef<OrderDialogComponent>>;
+  let dialogRef: Mocked<MatDialogRef<OrderDialogComponent>>;
   let httpTestingController: HttpTestingController;
 
   beforeEach(async () => {
-    dialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
+    dialogRef = { close: vi.fn() } as unknown as Mocked<MatDialogRef<OrderDialogComponent>>;
     await TestBed.configureTestingModule({
       declarations: [ OrderDialogComponent ],
       imports: [ FormsModule ],

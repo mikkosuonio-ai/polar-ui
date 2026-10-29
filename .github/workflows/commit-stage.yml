@@ -52,8 +52,8 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      # testAngular downloads the Node.js in build.gradle and runs the unit tests once in the runner's Chrome
-      # (CHROME_BIN), writing JUnit results to build/test-results/testAngular.
+      # testAngular downloads the Node.js in build.gradle and runs the unit tests once with Vitest
+      # in jsdom, writing JUnit results to build/test-results/testAngular.
       - name: Unit tests
         run: |
           chmod +x gradlew

@@ -1,3 +1,4 @@
+import type { Mocked } from 'vitest';
 import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -8,10 +9,10 @@ import { HttpInterceptorImpl } from './http.interceptor';
 describe('HttpInterceptor', () => {
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: Mocked<AuthService>;
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['login']);
+    authService = { login: vi.fn() } as unknown as Mocked<AuthService>;
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
@@ -50,7 +51,7 @@ describe('HttpInterceptor', () => {
 
   // GET /user answers 401 on every page load of an anonymous visitor.
   it('only logs a 401 on /user', () => {
-    spyOn(console, 'log');
+    vi.spyOn(console, 'log').mockReturnValue(undefined);
     httpClient.get('/user').subscribe({ error: () => {} });
     httpTestingController.expectOne('/user').flush(null, { status: 401, statusText: 'Unauthorized' });
     expect(authService.login).not.toHaveBeenCalled();
