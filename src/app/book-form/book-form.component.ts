@@ -24,7 +24,7 @@ export class BookFormComponent implements OnInit {
   @Input() buttonText = 'Submit';
   @Input() titleText = 'Book Information';
   @Input() currentBook: Book | undefined;
-  @Output() onSubmit = new EventEmitter<Book>();
+  @Output() submitted = new EventEmitter<Book>();
 
   book: Book = {
     id: undefined,
@@ -35,8 +35,6 @@ export class BookFormComponent implements OnInit {
     publisher: ''
   };
 
-  constructor() { }
-
   ngOnInit(): void {
     if (this.currentBook) {
       this.book = this.currentBook;
@@ -44,7 +42,7 @@ export class BookFormComponent implements OnInit {
   }
 
   onButtonClicked(): void {
-    this.onSubmit.emit(this.book);
+    this.submitted.emit(this.book);
   }
 
 }

@@ -44,7 +44,7 @@ describe('HttpInterceptor', () => {
   });
 
   it('sends the visitor to log in on a 401', () => {
-      httpClient.get('/orders').subscribe({ error: () => {} });
+      httpClient.get('/orders').subscribe({ error: () => undefined });
       httpTestingController.expectOne('/orders').flush(null, { status: 401, statusText: 'Unauthorized' });
       expect(authService.login).toHaveBeenCalledTimes(1);
   });
@@ -52,7 +52,7 @@ describe('HttpInterceptor', () => {
   // GET /user answers 401 on every page load of an anonymous visitor.
   it('only logs a 401 on /user', () => {
       vi.spyOn(console, 'log').mockReturnValue(undefined);
-      httpClient.get('/user').subscribe({ error: () => {} });
+      httpClient.get('/user').subscribe({ error: () => undefined });
       httpTestingController.expectOne('/user').flush(null, { status: 401, statusText: 'Unauthorized' });
       expect(authService.login).not.toHaveBeenCalled();
       expect(console.log).toHaveBeenCalledWith('Unauthenticated session');

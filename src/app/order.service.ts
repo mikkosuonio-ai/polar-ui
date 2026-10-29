@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Order, OrderRequest } from './types';
@@ -13,15 +13,14 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class OrderService {
-
-  constructor(private httpClient: HttpClient) { }
+  private httpClient = inject(HttpClient);
 
   getOrders(): Observable<Order[]> {
     return this.httpClient.get<Order[]>('/orders');
   }
 
-  submitOrder(orderRequest: OrderRequest): Observable<any> {
-    return this.httpClient.post<any>(`/orders`,
+  submitOrder(orderRequest: OrderRequest): Observable<Order> {
+    return this.httpClient.post<Order>(`/orders`,
       orderRequest,
       httpOptions
     );

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -26,6 +26,9 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class AppComponent implements OnInit {
+  private authService = inject(AuthService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private httpXsrfTokenExtractor = inject(HttpXsrfTokenExtractor);
 
   title = 'Polar Bookshop';
 
@@ -37,12 +40,6 @@ export class AppComponent implements OnInit {
       map(result => result.matches),
       shareReplay()
     );
-
-  constructor(
-    private authService: AuthService,
-    private breakpointObserver: BreakpointObserver,
-    private httpXsrfTokenExtractor: HttpXsrfTokenExtractor,
-  ) {}
 
   ngOnInit(): void {
     this.authService.authenticate().subscribe(user => {

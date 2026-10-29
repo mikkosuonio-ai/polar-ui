@@ -52,12 +52,15 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      # testAngular downloads the Node.js in build.gradle and runs the unit tests once with Vitest
-      # in jsdom, writing JUnit results to build/test-results/testAngular.
-      - name: Unit tests
+      # lintAngular downloads the Node.js in build.gradle and lints with angular-eslint.
+      - name: Lint
         run: |
           chmod +x gradlew
-          ./gradlew testAngular
+          ./gradlew lintAngular
+      # testAngular runs the unit tests once with Vitest in jsdom, writing JUnit results to
+      # build/test-results/testAngular.
+      - name: Unit tests
+        run: ./gradlew testAngular
       - name: Summarize unit tests
         if: ${{ !cancelled() }}
         run: |

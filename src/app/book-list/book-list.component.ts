@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Book } from '../types';
@@ -27,18 +27,15 @@ import { AsyncPipe } from '@angular/common';
   ]
 })
 export class BookListComponent implements OnInit {
+  dialog = inject(MatDialog);
+  private bookService = inject(BookService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private router = inject(Router);
 
   books: Book[] = [];
 
   colNumber = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => matches ? 2 : 3));
-
-  constructor(
-    public dialog: MatDialog,
-    private bookService: BookService,
-    private breakpointObserver: BreakpointObserver,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.loadBooks();

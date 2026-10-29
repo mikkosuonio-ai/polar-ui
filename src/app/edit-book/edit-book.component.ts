@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { Book } from '../types';
@@ -13,10 +13,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   imports: [BookFormComponent, MatProgressSpinner]
 })
 export class EditBookComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private bookService = inject(BookService);
+  private router = inject(Router);
 
   book!: Book;
-
-  constructor(private route: ActivatedRoute, private bookService: BookService, private router: Router) { }
 
   ngOnInit(): void {
     const isbn = this.route.snapshot.paramMap.get('isbn') as string;

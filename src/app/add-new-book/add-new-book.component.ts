@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookService } from '../book.service';
 import { Book } from '../types';
@@ -11,12 +11,9 @@ import { BookFormComponent } from '../book-form/book-form.component';
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [BookFormComponent]
 })
-export class AddNewBookComponent implements OnInit {
-
-  constructor(private bookService: BookService, private router: Router) { }
-
-  ngOnInit(): void {
-  }
+export class AddNewBookComponent {
+  private bookService = inject(BookService);
+  private router = inject(Router);
 
   onSubmit(book: Book): void {
     this.bookService.addBook(book)

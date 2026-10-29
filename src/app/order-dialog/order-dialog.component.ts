@@ -1,10 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { BookService } from '../book.service';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { OrderService } from '../order.service';
 import { Book } from '../types';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { Inject } from '@angular/core';
+
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -21,21 +19,12 @@ import { MatButton } from '@angular/material/button';
     MatDialogActions, MatButton
   ]
 })
-export class OrderDialogComponent implements OnInit {
+export class OrderDialogComponent {
+  dialogRef = inject<MatDialogRef<OrderDialogComponent>>(MatDialogRef);
+  book = inject<Book>(MAT_DIALOG_DATA);
+  private orderService = inject(OrderService);
 
-  book: Book;
   bookQuantity = 1;
-
-  constructor(
-    public dialogRef: MatDialogRef<OrderDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Book,
-    private orderService: OrderService,
-  ) {
-    this.book = data;
-  }
-
-  ngOnInit(): void {
-  }
 
   submitOrder(): void {
     const orderRequest = {

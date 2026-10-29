@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Book } from './types';
@@ -13,8 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class BookService {
-
-  constructor(private httpClient: HttpClient) { }
+  private httpClient = inject(HttpClient);
 
   getBooks(): Observable<Book[]> {
     return this.httpClient.get<Book[]>('/books');
@@ -38,8 +37,8 @@ export class BookService {
     );
   }
 
-  deleteBook(isbn: string): Observable<any> {
-    return this.httpClient.delete<any>(`/books/${isbn}`);
+  deleteBook(isbn: string): Observable<void> {
+    return this.httpClient.delete<void>(`/books/${isbn}`);
   }
 
 }

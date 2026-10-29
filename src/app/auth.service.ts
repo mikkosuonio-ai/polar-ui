@@ -1,5 +1,5 @@
 import { HttpClient, HttpXsrfTokenExtractor } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 import { User } from './types';
@@ -8,8 +8,9 @@ import { User } from './types';
   providedIn: 'root'
 })
 export class AuthService {
-
-  constructor(private httpClient: HttpClient, private location: Location, private httpXsrfTokenExtractor: HttpXsrfTokenExtractor) { }
+  private httpClient = inject(HttpClient);
+  private location = inject(Location);
+  private httpXsrfTokenExtractor = inject(HttpXsrfTokenExtractor);
 
   authenticate(): Observable<User> {
     return this.httpClient.get<User>('/user');
@@ -19,10 +20,10 @@ export class AuthService {
     window.open('/oauth2/authorization/keycloak', '_self');
   }
 
-  logout(): Observable<any> {
-    const formData: any = new FormData();
-    formData.append('_csrf', this.httpXsrfTokenExtractor.getToken());
-    return this.httpClient.post<any>('/logout', formData);
+  logout(): Observable<unknown> {
+    const formData = new FormData();
+    formData.append('_csrf', this.httpXsrfTokenExtractor.getToken() ?? '');
+    return this.httpClient.post('/logout', formData);
   }
 
 }

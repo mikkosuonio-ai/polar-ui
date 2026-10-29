@@ -15,8 +15,8 @@ Differences from the original:
   files in the buildpack's `{{ tempDir }}`.
 - The unit tests run headless in the build (`testAngular`), and the workflow runs them before
   it builds the image.
-- No linter for now: tslint and codelyzer are gone, and angular-eslint is to come with the
-  Angular update.
+- angular-eslint lints the code and templates (`./gradlew lintAngular`, and in the workflow),
+  in place of tslint and codelyzer.
 - The SPA serves its fonts and icons itself (`@fontsource/roboto`, `material-icons`, under
   `media/`) instead of loading them from Google Fonts, so neither the page nor the build depends
   on Google. edge-service lets `/media/**` through from the main repository's 1e5acf6 on.
@@ -47,6 +47,12 @@ The update to Angular 22 and Node.js 24 is planned in
 - **v1.2.1** and earlier: see git history.
 
 ## Instructions
+
+Lint the code and the templates with angular-eslint.
+
+```shell
+./gradlew lintAngular
+```
 
 Run the unit tests once, with Vitest in jsdom, so they need no browser. The JUnit results go to
 `build/test-results/testAngular`.
