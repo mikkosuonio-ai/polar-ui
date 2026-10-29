@@ -16,6 +16,33 @@ The app should behave the same throughout. Only Material's MDC components change
 
 Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions, the angular-cli and angular/components changelogs and migration collections, the npm registry, github.com/nodejs/Release and plugins.gradle.org.
 
+## Progress (2026-10-29)
+
+- **Released and verified in the main repository's CI:**
+  - v1.3.0: Angular 13, preparation;
+  - v1.4.0: Angular 16 with MDC.
+- **Released, being verified there:** v2.0.0 (Angular 22, Node.js 24).
+- **Next:** step 11 (standalone, angular-eslint, budgets, gating axe), then step 12 (v2.1.0).
+- **Where the run differed from the plan:**
+  - **Fonts:** the first self-hosting try failed through edge-service (401 for the files at the root). They came back in v2.0.0 under `media/`, after the main repository let `/media/**` through (its 1e5acf6).
+  - **HTTP backend:** Angular 22's migration kept the XHR backend (`withXhr()`), so HttpClient doesn't use fetch. Moving to fetch is left for a step of its own.
+  - **rxjs:** went to 7.8.2 at Angular 20. With `moduleResolution: bundler`, TypeScript finds no types for rxjs 7.4.
+  - **Packages and config:**
+    - karma went to 6.4 at Angular 20;
+    - `@types/node` 12 → 24, which had blocked npm against webpack-dev-server's peers;
+    - tsconfig's `baseUrl` went at Angular 22, since TypeScript 6 rejects it.
+  - **The Vitest migration:**
+    - it needs `@angular/build:application`, so the build moved to `@angular/build`'s builders;
+    - the specs' spies became Vitest's, with mocked return values;
+    - `waitForAsync`/`fakeAsync` became `async` and fake timers, since Vitest runs no ProxyZone.
+  - **The migrations' re-indenting** of decorators, NgModule and specs was undone each time.
+- **The initial bundle** grew from 705 kB (13) to 972 kB (22, with the font CSS). That's over the 900 kB warning budget and under the 1 MB error budget, to be set at step 11.
+- **Memory in smoke runs:**
+  - with the full stack up, about 770 MiB is left;
+  - the browser tests (the Playwright runner and headless Chromium) take it to about 220 MiB, with memory pressure stalling about 6% of the time;
+  - Claude Code's memory-pressure check stopped one run while the session was idle, and the re-run passed. Keeping the session busy during the browser phase avoids that.
+  - One earlier logout test timed out because the SPA took 84 s to start under that pressure; the re-run passed.
+
 ## Decisions
 
 - **Target: Angular 22.2.x** (Material/CDK 22.2.x, CLI 22.2.5).
