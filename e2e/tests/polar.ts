@@ -26,8 +26,8 @@ export const POLAR_JOURNEY: Book = {
 // mock answers with a page of its own instead.
 export const LOGIN = /\/oauth2\/authorization\/keycloak$/;
 
-// A request the SPA made to the API.
-export type Call = { method: string; path: string; body: unknown };
+// A request the SPA made to the API, with its headers' names in lower case.
+export type Call = { method: string; path: string; body: unknown; headers: Record<string, string> };
 
 // The API as edge-service serves it, with the JSON shapes of edge-service's User and the
 // services' Book and Order, kept in the browser test's memory. Each test starts with
@@ -54,7 +54,7 @@ export class Api {
     const request = route.request();
     const method = request.method();
     const path = new URL(request.url()).pathname;
-    this.calls.push({ method, path, body: request.postDataJSON() });
+    this.calls.push({ method, path, body: request.postDataJSON(), headers: await request.allHeaders() });
 
     const failure = this.failures.get(`${method} ${path}`);
     if (failure) return route.fulfill({ status: failure });
@@ -93,6 +93,10 @@ export class Api {
       this.orders.push(order);
       return json(order);
     }
+    // The logout form's post, which edge-service would answer with a redirect to the SPA.
+    if (path === '/logout' && method === 'POST') {
+      return route.fulfill({ contentType: 'text/html', body: '<title>Logged out</title><h1>Logged out (mocked)</h1>' });
+    }
     if (LOGIN.test(path) && method === 'GET') {
       return route.fulfill({ contentType: 'text/html', body: '<title>Log in</title><h1>Log in (mocked)</h1>' });
     }
@@ -101,7 +105,7 @@ export class Api {
 }
 
 // The requests that go to the API rather than to the SPA's files.
-const API_PATHS = /^\/(user|books|orders|oauth2)(\/|$)/;
+const API_PATHS = /^\/(user|books|orders|oauth2|logout)(\/|$)/;
 
 // What a page does on every anonymous load: GET /user answers 401, and AppComponent, which
 // subscribes to it without an error handler, logs the error.
