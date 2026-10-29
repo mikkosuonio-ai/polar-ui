@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -28,7 +29,8 @@ describe('BookListComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ BookListComponent ],
       // The template exports matMenu, which needs MatMenuModule even with NO_ERRORS_SCHEMA.
-      imports: [ HttpClientTestingModule, MatDialogModule, MatMenuModule, NoopAnimationsModule, RouterTestingModule ],
+      imports: [ MatDialogModule, MatMenuModule, NoopAnimationsModule, RouterTestingModule ],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

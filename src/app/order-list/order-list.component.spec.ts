@@ -1,4 +1,5 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -20,7 +21,7 @@ describe('OrderListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ OrderListComponent ],
-      imports: [ HttpClientTestingModule ],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

@@ -1,5 +1,6 @@
 import { LayoutModule } from '@angular/cdk/layout';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,7 +23,6 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       declarations: [AppComponent],
       imports: [
-        HttpClientTestingModule,
         NoopAnimationsModule,
         LayoutModule,
         MatButtonModule,
@@ -32,7 +32,8 @@ describe('AppComponent', () => {
         MatSidenavModule,
         MatToolbarModule,
         RouterTestingModule
-      ]
+      ],
+      providers: [provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
     httpTestingController = TestBed.inject(HttpTestingController);
   }));
