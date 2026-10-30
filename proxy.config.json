@@ -1,5 +1,35 @@
 {
-    "/": {
+    "/books": {
+        "target": "http://localhost:9000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/orders": {
+        "target": "http://localhost:9000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/user": {
+        "target": "http://localhost:9000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/oauth2": {
+        "target": "http://localhost:9000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/login": {
+        "target": "http://localhost:9000",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/logout": {
         "target": "http://localhost:9000",
         "secure": false,
         "logLevel": "debug",
