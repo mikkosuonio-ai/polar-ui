@@ -2,7 +2,7 @@
   <h1 class="mat-h1">My Orders</h1>
   @if (orders) {
     <mat-grid-list [cols]="colNumber | async" rowHeight="380px">
-      @for (order of orders; track order) {
+      @for (order of orders; track order.id) {
         <mat-grid-tile colspan="1" rowspan="1">
           <mat-card class="dashboard-card">
             <mat-card-header>
