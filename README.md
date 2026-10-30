@@ -29,8 +29,9 @@ Differences from the original:
 
 ### Releases
 
-The update to Angular 22 and Node.js 24 is planned in
-[`plan/angular-update.md`](plan/angular-update.md).
+The update to Angular 22 and Node.js 24 (v1.3.0 to v2.1.1) followed a plan that is in the git
+history (`git show fbf8cec:plan/angular-update.md`). What's left is in
+[`plan/future-work.md`](plan/future-work.md).
 
 - **v2.1.1** (Angular 22): HttpClient makes its calls with fetch instead of XHR; XSRF, the
   headers and the 401 handling are unchanged. The book and order lists keep the cards of the
