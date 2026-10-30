@@ -24,6 +24,7 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
   - v2.0.0: Angular 22, Node.js 24, self-hosted fonts;
   - v2.0.1: standalone, angular-eslint, the axe gate.
   - v2.1.0: findings 39 and 40 (the main repository's a12e14e, CI run 40919427025).
+  - v2.1.1: fetch and the review's fixes, step 13 (the main repository's 8afafad, CI run 41069894685).
 - **Step 11, by the numbers:**
   - dropping `@angular/animations` and the NgModules took the initial bundle from 972 to 869 kB;
   - the snack bar of v2.1.0 brings it to 897 kB, so the 900 kB warning and 1 MB error budgets stay;
@@ -57,6 +58,7 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
   - the browser tests (the Playwright runner and headless Chromium) take it to about 220 MiB, with memory pressure stalling about 6% of the time;
   - Claude Code's memory-pressure check stopped one run while the session was idle, and the re-run passed. Keeping the session busy during the browser phase avoids that.
   - One earlier logout test timed out because the SPA took 84 s to start under that pressure; the re-run passed.
+  - At v2.1.1 (2026-10-30), with about 1 GB more held by other Claude sessions, a different browser test timed out in each local run, from both sessions: a font took 106 s through edge-service in one trace. `test ui` passed 100/100 once here; the main repository's CI passed 100/100.
 
 ## Decisions
 
