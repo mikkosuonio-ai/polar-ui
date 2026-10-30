@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { test, expect, CUSTOMER, EMPLOYEE, NORTHERN_LIGHTS, cards, openMenu } from './polar';
 
 // axe-core finds no serious or critical violations on the main pages. Moderate ones remain, as
-// in plan/screens: content outside landmarks, no h1 on the book forms, and the nested
+// in plan/screens/v22: content outside landmarks, no h1 on the book forms, and the nested
 // navigation landmarks.
 async function expectNoSeriousViolations(page: Page) {
   const { violations } = await new AxeBuilder({ page }).analyze();

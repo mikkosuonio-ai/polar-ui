@@ -52,12 +52,13 @@ history (`git show fbf8cec:plan/angular-update.md`). What's left is in
   `ng e2e` from the root project. HttpClient goes through `provideHttpClient`, still with XHR,
   and still sends the raw XSRF-TOKEN cookie as X-XSRF-TOKEN.
 - **v1.4.0** (Angular 16): Angular Material's MDC components replace the legacy ones, which
-  changes the look ([`plan/screens/mdc`](plan/screens/mdc) against `v13`): filled form fields
-  with floating labels, Material's MDC typography with wider letter spacing, and new spacing in
-  cards, buttons and the order dialog. Behaviour, roles and labels are unchanged.
+  changes the look (screenshots `plan/screens/mdc` against `v13`, in the git history up to
+  08dc749): filled form fields with floating labels, Material's MDC typography with wider
+  letter spacing, and new spacing in cards, buttons and the order dialog. Behaviour, roles and
+  labels are unchanged.
 - **v1.3.0** (Angular 13): the page is titled "Polar Bookshop"; the look is unchanged
-  ([`plan/screens/v13`](plan/screens/v13)). The build has the node-gradle plugin 7.1.0, and
-  the e2e tests pin the CSRF token and headers the SPA sends.
+  (`plan/screens/v13`, in the git history up to 08dc749). The build has the node-gradle plugin
+  7.1.0, and the e2e tests pin the CSRF token and headers the SPA sends.
 - **v1.2.1** and earlier: see git history.
 
 ## Instructions

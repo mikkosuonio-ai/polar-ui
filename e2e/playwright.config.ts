@@ -25,7 +25,7 @@ import { join } from 'node:path';
 //   UI_TEST_REPORT  also write the HTML report to this directory
 //   UI_TEST_VISUAL  run only the @visual tests (tests/screens.spec.ts) instead, which save a
 //                   screenshot and an axe-core report of each main page to this directory, such
-//                   as plan/screens/v13
+//                   as plan/screens/v22
 const port = Number(process.env.PORT ?? 4300);
 const baseURL = process.env.UI_BASE_URL ?? `http://127.0.0.1:${port}`;
 const dist = join(__dirname, '..', 'dist', 'public');
