@@ -59,8 +59,9 @@ test('removing a book loads the book list again', async ({ page, api }) => {
 });
 
 // When GET /books/{isbn} fails, as it will with catalog-service down once edge-service answers
-// it with 503 (finding 38 in the main repository's review), EditBookComponent, which has no
-// error handler, shows its spinner for good. It should say that the book can't be loaded.
+// it with 503 (finding 38 in the main repository's review), EditBookComponent says that the
+// book can't be loaded in place of its spinner (finding 39), instead of showing the spinner for
+// good.
 test('the edit page says so when the book cannot be loaded', async ({ page, api, problems }) => {
   problems.allow(...failedCall('GET', `/books/${NORTHERN_LIGHTS.isbn}`, 503));
   api.fail('GET', `/books/${NORTHERN_LIGHTS.isbn}`, 503);

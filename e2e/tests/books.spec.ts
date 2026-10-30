@@ -22,8 +22,8 @@ test('an empty catalog shows an empty book list', async ({ page, api }) => {
   await expect(cards(page)).toHaveCount(0);
 });
 
-// BookListComponent has no error handler: the list stays empty, without a message, and the
-// visitor isn't sent to log in.
+// BookListComponent says that the books can't be loaded in place of the list (finding 39 in the
+// main repository), and the visitor isn't sent to log in.
 test('a failing catalog says the books cannot be loaded', async ({ page, api, problems }) => {
   problems.allow(...failedCall('GET', '/books', 500));
   api.fail('GET', '/books', 500);
