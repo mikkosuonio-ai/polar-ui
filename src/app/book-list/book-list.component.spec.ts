@@ -3,8 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Router, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { OrderDialogComponent } from '../order-dialog/order-dialog.component';
@@ -25,8 +24,8 @@ describe('BookListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BookListComponent, RouterTestingModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [BookListComponent],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

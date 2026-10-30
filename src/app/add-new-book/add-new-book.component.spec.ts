@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 import { AddNewBookComponent } from './add-new-book.component';
 
@@ -12,8 +12,8 @@ describe('AddNewBookComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, AddNewBookComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      imports: [AddNewBookComponent],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

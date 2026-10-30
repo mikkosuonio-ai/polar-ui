@@ -14,7 +14,17 @@ module.exports = defineConfig([
       angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
+    // Type information, for no-deprecated below.
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: __dirname,
+      },
+    },
     rules: {
+      // Fails on Angular's, Material's and RxJS's deprecated APIs, so that they're replaced
+      // before the next major removes them.
+      "@typescript-eslint/no-deprecated": "error",
       // The components keep Angular's eager change detection, which Angular 22's migration set:
       // they update plain fields in subscribe callbacks, which OnPush wouldn't render without
       // signals or markForCheck.

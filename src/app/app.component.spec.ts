@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { config } from 'rxjs';
 import { AppComponent } from './app.component';
 import { AuthService } from './auth.service';
@@ -13,8 +13,8 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent, RouterTestingModule],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      imports: [AppComponent],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
     httpTestingController = TestBed.inject(HttpTestingController);
   });

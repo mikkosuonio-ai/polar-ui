@@ -2,8 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 
 import { EditBookComponent } from './edit-book.component';
 
@@ -13,8 +12,9 @@ describe('EditBookComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, EditBookComponent],
+      imports: [EditBookComponent],
       providers: [
+        provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: convertToParamMap({ isbn: '1234567891' }) } } }
