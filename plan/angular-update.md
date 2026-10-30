@@ -32,7 +32,6 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
   - **code:** no open alerts; Angular 13's and the build tools' (Node.js 16, esbuild's Go 1.17) are fixed;
   - **image:** 140 open (3 critical, 72 high), all in the Ubuntu 22.04 packages and nginx of the pinned `builder-jammy-base:0.4.673`.
 - **Left for later:**
-  - HttpClient's fetch backend;
   - zoneless and OnPush with signals;
   - Material 3;
   - Node.js 26;
@@ -41,7 +40,7 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
 - **The disk filled up once** (2026-10-29) with superseded Paketo builder images. `podman image prune` freed 21 GB.
 - **Where the run differed from the plan:**
   - **Fonts:** the first self-hosting try failed through edge-service (401 for the files at the root). They came back in v2.0.0 under `media/`, after the main repository let `/media/**` through (its 1e5acf6).
-  - **HTTP backend:** Angular 22's migration kept the XHR backend (`withXhr()`), so HttpClient doesn't use fetch. Moving to fetch is left for a step of its own.
+  - **HTTP backend:** Angular 22's migration kept the XHR backend (`withXhr()`), so v2.0.0–v2.1.0 didn't use fetch. HttpClient moved to fetch in v2.1.1, with the review's fixes (step 13).
   - **rxjs:** went to 7.8.2 at Angular 20. With `moduleResolution: bundler`, TypeScript finds no types for rxjs 7.4.
   - **Packages and config:**
     - karma went to 6.4 at Angular 20;
@@ -333,7 +332,7 @@ Facts checked on 2026-10-29 against angular.dev/reference/releases and /versions
   - README updated: one Node.js for build and e2e.
 - **Release v2.0.0.** For users:
   - nothing visible beyond v1.4.0;
-  - HTTP goes through fetch.
+  - HTTP was planned to go through fetch here; the migration kept XHR until v2.1.1.
   - The new major marks the new build: Node 24, esbuild, Vitest.
 
 ### 11. After the update
@@ -368,6 +367,17 @@ These come after the update, not during it:
 - **The spinner:** `books`/`orders` start `undefined`, not `[]`, so the spinner shows while loading.
 - **40, totals:** `currency` pipe instead of `toPrecision(4)`. `e2e/tests/orders.spec.ts:44` changes from `$9.900` to `$9.90`; the other totals stay the same.
 
+### 13. The review's fixes → release v2.1.1
+
+From a review of the whole update (2026-10-30), one commit each:
+1. the specs use `provideRouter([])` instead of the deprecated `RouterTestingModule`, and lint fails on deprecated APIs (`@typescript-eslint/no-deprecated`, with type information);
+2. the template diagnostics that Angular 22's `strict-safe-navigation-narrow` migration suppressed are on again;
+3. HttpClient uses fetch: `withXhr()` goes;
+4. two e2e comments describe the error handling of v2.1.0;
+5. `@for` tracks books by ISBN and orders by ID;
+6. `ng serve` proxies only edge-service's paths and builds for development;
+7. `tsconfig.json` has Angular 22's defaults (`isolatedModules`, `skipLibCheck`, `noImplicitOverride`, `module: preserve`).
+
 ## What the main repository's browser tests need, per release
 
 Made in that repository by its own session. Selector changes go into both copies of the helpers: `development/ui-test/tests/polar.ts` there and `e2e/tests/polar.ts` here.
@@ -376,8 +386,9 @@ Made in that repository by its own session. Selector changes go into both copies
 |---|---|---|
 | v1.3.0 | Fonts and icons served by the app; title | Nothing breaks. Optional, in both `polar.ts` copies: drop the `FONTS` route and its allow pattern, which now block nothing. |
 | v1.4.0 | MDC components | Expected: no selector changes. `mat-card.dashboard-card`, `mat-card-title`, `mat-spinner`, the nested navigation, the textbox and spinbutton names, the dialog name and the menu items are all kept. If a step breaks one, its fix is listed here for both copies. |
-| v2.0.0 | HTTP through `provideHttpClient` and fetch | No test changes. **What the SPA sends:** `X-XSRF-TOKEN` = the **raw** value of the `XSRF-TOKEN` cookie, on POST/PUT/DELETE to relative URLs, plus `X-Requested-With: XMLHttpRequest`; the logout form posts the same raw value as `_csrf`. Under Spring Security 6, edge-service has to accept raw tokens; that is its concern. `02-employee` and `04-session` cover it. |
+| v2.0.0 | HTTP through `provideHttpClient` (still XHR; fetch from v2.1.1) | No test changes. **What the SPA sends:** `X-XSRF-TOKEN` = the **raw** value of the `XSRF-TOKEN` cookie, on POST/PUT/DELETE to relative URLs, plus `X-Requested-With: XMLHttpRequest`; the logout form posts the same raw value as `_csrf`. Under Spring Security 6, edge-service has to accept raw tokens; that is its concern. `02-employee` and `04-session` cover it. |
 | v2.1.0 | 39, the spinner, 40 | Check `05-outages`: a write during a catalog outage now shows a message. The anonymous `/user` 401 `ERROR` allowance can go from both copies. `03-customer`'s `$19.80` is unchanged. 38's edit page test can rely on 39's message. |
+| v2.1.1 | Fetch instead of XHR; the review's fixes | No test changes expected: the fork's e2e tests, which check responses, failed requests and console lines, pass unchanged with fetch. If `02-employee`, `04-session` or `05-outages` see a fetch-specific problem line, adjust `failedCall` or `ANONYMOUS_USER` in both `polar.ts` copies. |
 
 ## Verification at every step
 

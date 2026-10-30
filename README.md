@@ -32,6 +32,10 @@ Differences from the original:
 The update to Angular 22 and Node.js 24 is planned in
 [`plan/angular-update.md`](plan/angular-update.md).
 
+- **v2.1.1** (Angular 22): HttpClient makes its calls with fetch instead of XHR; XSRF, the
+  headers and the 401 handling are unchanged. The book and order lists keep the cards of the
+  items still there when they load again. `ng serve` proxies only edge-service's paths and
+  builds for development. Lint fails on deprecated APIs. The look is v2.1.0's.
 - **v2.1.0** (Angular 22): failed HTTP calls say so. A failed load of the books, the orders or
   the book to edit shows "… can't be loaded. Please try again later." in place of the list,
   and a failed create, update, remove or order shows a snack bar ("… Please try again.").
